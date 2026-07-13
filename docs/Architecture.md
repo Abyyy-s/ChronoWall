@@ -1,7 +1,14 @@
-# ChronoWall Architecture
+## Concepts
 
-ChronoWall is divided into independent modules.
+- Wallpaper Image
+- Display State
+- Transition
+- Timeline
+- XML Definition
+## Concepts
 
-Each module has one responsibility.
-
-The modules communicate with each other through clear interfaces.
+- Wallpaper Image
+- Display State
+- Transition
+- Timeline
+- XML Definition
