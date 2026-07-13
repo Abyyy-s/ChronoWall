@@ -1,15 +1,29 @@
+
 # ChronoWall
 
-ChronoWall is a modern C++ application that brings GNOME Dynamic XML wallpapers to the Cinnamon desktop environment.
+> Bring GNOME Dynamic Wallpapers to the Cinnamon Desktop.
+
+ChronoWall is an open-source desktop utility written in Modern C++ that enables GNOME Dynamic XML wallpapers to work seamlessly on the Cinnamon desktop environment.
+
+---
+
+## Vision
+
+ChronoWall aims to provide a lightweight, native, and extensible wallpaper engine for Linux users who want dynamic wallpapers without switching desktop environments.
+
+---
 
 ## Goals
 
 - Parse GNOME Dynamic Wallpaper XML files
-- Support every GNOME XML wallpaper
-- Run natively on Cinnamon
+- Support Cinnamon Desktop
 - Lightweight
+- Native Linux application
 - Modern C++17
-- Cross-distribution where possible
+- Open Source
 
-Status:
-🚧 In Development
+---
+
+## Status
+
+🚧 Under Development
