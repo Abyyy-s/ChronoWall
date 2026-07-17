@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/ChronoWall.dir/src/main.cpp.o CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o -o ChronoWall 
