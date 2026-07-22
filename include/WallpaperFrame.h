@@ -10,10 +10,10 @@ private:
     double duration;
 
 public:
-    WallpaperFrame(std::string imagePath, int duration);
+    WallpaperFrame(std::string imagePath, double duration);
 
     std::string getImagePath();
-    int getDuration();
+    double getDuration();
 };
 
 #endif
