@@ -12,8 +12,8 @@ private:
 public:
     WallpaperFrame(std::string imagePath, double duration);
 
-    std::string getImagePath();
-    double getDuration();
+    std::string getImagePath() const;
+    double getDuration() const;
 };
 
 #endif

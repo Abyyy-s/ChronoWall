@@ -10,4 +10,5 @@ include_directories(include)
 add_executable(ChronoWall
     src/main.cpp
     src/WallpaperFrame.cpp
+    src/WallpaperParser.cpp
 )
