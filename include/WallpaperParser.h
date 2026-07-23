@@ -5,7 +5,6 @@
 
 #include <string>
 #include <vector>
-
 #include "WallpaperFrame.h"
 
 class WallpaperParser
