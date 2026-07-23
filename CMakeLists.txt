@@ -5,10 +5,14 @@ project(ChronoWall)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(include)
+find_package(tinyxml2 REQUIRED)
 
 add_executable(ChronoWall
     src/main.cpp
     src/WallpaperFrame.cpp
     src/WallpaperParser.cpp
 )
+
+target_include_directories(ChronoWall PRIVATE include)
+
+target_link_libraries(ChronoWall PRIVATE tinyxml2::tinyxml2)
