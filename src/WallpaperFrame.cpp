@@ -1,6 +1,6 @@
 #include "WallpaperFrame.h"
 
-WallpaperFrame::WallpaperFrame(std::string imagePath, int duration)
+WallpaperFrame::WallpaperFrame(std::string imagePath, double duration)
     : imagePath(imagePath), duration(duration)
 {
 }
@@ -10,7 +10,7 @@ std::string WallpaperFrame::getImagePath() const
     return imagePath;
 }
 
-int WallpaperFrame::getDuration() const
+double WallpaperFrame::getDuration() const
 {
     return duration;
 }
