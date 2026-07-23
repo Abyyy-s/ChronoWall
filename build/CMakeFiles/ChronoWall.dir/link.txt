@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/ChronoWall.dir/src/main.cpp.o CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o -o ChronoWall 
+/usr/bin/c++ CMakeFiles/ChronoWall.dir/src/main.cpp.o CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o -o ChronoWall  /usr/lib/x86_64-linux-gnu/libtinyxml2.so.10.0.0 

@@ -224,6 +224,9 @@ ChronoWall_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 ChronoWall_SOURCE_DIR:STATIC=/home/aby/Projects/ChronoWall
 
+//The directory containing a CMake configuration file for tinyxml2.
+tinyxml2_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/tinyxml2
+
 
 ########################
 # INTERNAL cache entries

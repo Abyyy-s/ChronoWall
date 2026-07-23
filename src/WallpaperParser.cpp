@@ -1,41 +1,53 @@
 #include "WallpaperParser.h"
 #include <tinyxml2.h>
+#include <iostream>
 #include <string>
 #include <vector>
 
 std::vector<WallpaperFrame> WallpaperParser::parse(std::string xmlPath)
 {
-  std::vector<WallpaperFrame> frames;
+    std::vector<WallpaperFrame> frames;
 
-tinyxml2::XMLDocument doc;
-doc.LoadFile(xmlPath.c_str());
+    tinyxml2::XMLDocument doc;
 
-tinyxml2::XMLElement* root =
-    doc.FirstChildElement("background");
+    if (doc.LoadFile(xmlPath.c_str()) != tinyxml2::XML_SUCCESS)
+    {
+        std::cerr << "Failed to load XML file: " << xmlPath << '\n';
+        return frames;
+    }
 
-tinyxml2::XMLElement* wallpaper =
-    root->FirstChildElement("static");
+    tinyxml2::XMLElement* root =
+        doc.FirstChildElement("background");
 
-while (wallpaper != nullptr)
-{
-    tinyxml2::XMLElement* duration =
-        wallpaper->FirstChildElement("duration");
+    if (root == nullptr)
+    {
+        std::cerr << "No <background> element found.\n";
+        return frames;
+    }
 
-    double durationValue =
-        std::stod(duration->GetText());
+    tinyxml2::XMLElement* wallpaper =
+        root->FirstChildElement("static");
 
-    tinyxml2::XMLElement* file =
-        wallpaper->FirstChildElement("file");
+    while (wallpaper != nullptr)
+    {
+        tinyxml2::XMLElement* duration =
+            wallpaper->FirstChildElement("duration");
 
-    std::string imagePath =
-        file->GetText();
+        double durationValue =
+            std::stod(duration->GetText());
 
-    WallpaperFrame frame(imagePath, durationValue);
+        tinyxml2::XMLElement* file =
+            wallpaper->FirstChildElement("file");
 
-    frames.push_back(frame);
+        std::string imagePath =
+            file->GetText();
 
-    wallpaper = wallpaper->NextSiblingElement("static");
-}
+        WallpaperFrame frame(imagePath, durationValue);
 
-return frames;
+        frames.push_back(frame);
+
+        wallpaper = wallpaper->NextSiblingElement("static");
+    }
+
+    return frames;
 }

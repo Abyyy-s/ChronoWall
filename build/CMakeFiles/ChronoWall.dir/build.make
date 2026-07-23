@@ -124,6 +124,7 @@ ChronoWall: CMakeFiles/ChronoWall.dir/src/main.cpp.o
 ChronoWall: CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o
 ChronoWall: CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o
 ChronoWall: CMakeFiles/ChronoWall.dir/build.make
+ChronoWall: /usr/lib/x86_64-linux-gnu/libtinyxml2.so.10.0.0
 ChronoWall: CMakeFiles/ChronoWall.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable ChronoWall"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ChronoWall.dir/link.txt --verbose=$(VERBOSE)

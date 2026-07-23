@@ -5,7 +5,7 @@ int main()
 {
     WallpaperParser parser;
 
-    auto frames = parser.parse("MagicLake.xml");
+    auto frames = parser.parse("../MagicLake.xml");
 
     for (const auto& frame : frames)
     {
