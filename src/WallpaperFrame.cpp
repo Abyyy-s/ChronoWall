@@ -5,12 +5,12 @@ WallpaperFrame::WallpaperFrame(std::string imagePath, int duration)
 {
 }
 
-std::string WallpaperFrame::getImagePath()
+std::string WallpaperFrame::getImagePath() const
 {
     return imagePath;
 }
 
-int WallpaperFrame::getDuration()
+int WallpaperFrame::getDuration() const
 {
     return duration;
 }
