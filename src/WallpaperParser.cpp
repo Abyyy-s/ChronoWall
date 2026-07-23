@@ -33,14 +33,41 @@ std::vector<WallpaperFrame> WallpaperParser::parse(std::string xmlPath)
         tinyxml2::XMLElement* duration =
             wallpaper->FirstChildElement("duration");
 
+        if (duration == nullptr)
+        {
+            std::cerr << "Missing <duration> element.\n";
+            return frames;
+        }
+
+        const char* durationText = duration->GetText();
+
+        if (durationText == nullptr)
+        {
+            std::cerr << "Duration element is empty.\n";
+            return frames;
+        }
+
         double durationValue =
-            std::stod(duration->GetText());
+            std::stod(durationText);
 
         tinyxml2::XMLElement* file =
             wallpaper->FirstChildElement("file");
 
-        std::string imagePath =
-            file->GetText();
+        if (file == nullptr)
+        {
+            std::cerr << "Missing <file> element.\n";
+            return frames;
+        }
+
+        const char* fileText = file->GetText();
+
+        if (fileText == nullptr)
+        {
+            std::cerr << "File element is empty.\n";
+            return frames;
+        }
+
+        std::string imagePath = fileText;
 
         WallpaperFrame frame(imagePath, durationValue);
 
