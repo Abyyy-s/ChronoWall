@@ -12,8 +12,6 @@ std::string WallpaperFrame::getImagePath() const
 
 double WallpaperFrame::getDuration() const
 {
-
-    
     return duration;
 }
 
