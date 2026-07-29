@@ -3,6 +3,7 @@
 WallpaperFrame::WallpaperFrame(std::string imagePath, double duration)
     : imagePath(imagePath), duration(duration)
 {
+    
 }
 
 std::string WallpaperFrame::getImagePath() const
