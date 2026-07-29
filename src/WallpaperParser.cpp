@@ -6,6 +6,7 @@
 
 std::vector<WallpaperFrame> WallpaperParser::parse(std::string xmlPath)
 {
+    
     std::vector<WallpaperFrame> frames;
 
     tinyxml2::XMLDocument doc;
