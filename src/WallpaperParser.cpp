@@ -13,6 +13,7 @@ std::vector<WallpaperFrame> WallpaperParser::parse(std::string xmlPath)
 
     if (doc.LoadFile(xmlPath.c_str()) != tinyxml2::XML_SUCCESS)
     {
+        
         std::cerr << "Failed to load XML file: " << xmlPath << '\n';
         return frames;
     }
