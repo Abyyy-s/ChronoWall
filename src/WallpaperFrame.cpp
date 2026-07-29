@@ -1,5 +1,6 @@
 #include "WallpaperFrame.h"
 
+
 WallpaperFrame::WallpaperFrame(std::string imagePath, double duration)
     : imagePath(imagePath), duration(duration)
 {
