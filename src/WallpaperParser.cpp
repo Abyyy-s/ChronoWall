@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+
 std::vector<WallpaperFrame> WallpaperParser::parse(std::string xmlPath)
 {
     
