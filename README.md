@@ -27,6 +27,7 @@ ChronoWall aims to provide a lightweight, native, and extensible wallpaper engin
 
 ---
 
+
 ## Status
 
 🚧 Under Development
