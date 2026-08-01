@@ -14,6 +14,8 @@ ChronoWall is an open-source desktop utility written in Modern C++ that enables 
 ChronoWall aims to provide a lightweight, native, and extensible wallpaper engine for Linux users who want dynamic wallpapers without switching desktop environments.
 
 
+
+
 ---
 
 ## Goals
