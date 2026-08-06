@@ -1,5 +1,7 @@
 #include "WallpaperParser.h"
 #include "WallpaperScheduler.h"
+#include "WallpaperChanger.h"
+
 #include <iostream>
 
 int main()
@@ -13,21 +15,17 @@ int main()
     auto currentWallpaper =
         scheduler.getCurrentWallpaper(frames, 20000);
 
-    if (currentWallpaper)
-    {
-        std::cout << "Current Wallpaper\n";
-        std::cout << "Image: "
-                  << currentWallpaper->getImagePath()
-                  << '\n';
-
-        std::cout << "Duration: "
-                  << currentWallpaper->getDuration()
-                  << '\n';
-    }
-    else
+    if (!currentWallpaper)
     {
         std::cout << "No wallpaper found.\n";
+        return 1;
     }
+
+    WallpaperChanger changer;
+
+    changer.setWallpaper(*currentWallpaper);
+
+    std::cout << "Wallpaper changed successfully!\n";
 
     return 0;
 }

@@ -12,6 +12,7 @@ add_executable(ChronoWall
     src/WallpaperFrame.cpp
     src/WallpaperParser.cpp
     src/WallpaperScheduler.cpp
+    src/WallpaperChanger.cpp
 )
 
 target_include_directories(ChronoWall PRIVATE include)

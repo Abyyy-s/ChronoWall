@@ -129,6 +129,30 @@ ChronoWall/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/build
 .PHONY : ChronoWall/fast
 
+src/WallpaperChanger.o: src/WallpaperChanger.cpp.o
+.PHONY : src/WallpaperChanger.o
+
+# target to build an object file
+src/WallpaperChanger.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o
+.PHONY : src/WallpaperChanger.cpp.o
+
+src/WallpaperChanger.i: src/WallpaperChanger.cpp.i
+.PHONY : src/WallpaperChanger.i
+
+# target to preprocess a source file
+src/WallpaperChanger.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.i
+.PHONY : src/WallpaperChanger.cpp.i
+
+src/WallpaperChanger.s: src/WallpaperChanger.cpp.s
+.PHONY : src/WallpaperChanger.s
+
+# target to generate assembly for a file
+src/WallpaperChanger.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.s
+.PHONY : src/WallpaperChanger.cpp.s
+
 src/WallpaperFrame.o: src/WallpaperFrame.cpp.o
 .PHONY : src/WallpaperFrame.o
 
@@ -234,6 +258,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ChronoWall"
+	@echo "... src/WallpaperChanger.o"
+	@echo "... src/WallpaperChanger.i"
+	@echo "... src/WallpaperChanger.s"
 	@echo "... src/WallpaperFrame.o"
 	@echo "... src/WallpaperFrame.i"
 	@echo "... src/WallpaperFrame.s"
