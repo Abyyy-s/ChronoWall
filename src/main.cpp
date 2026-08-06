@@ -1,4 +1,5 @@
 #include "WallpaperParser.h"
+#include "WallpaperScheduler.h"
 #include <iostream>
 
 int main()
@@ -7,18 +8,25 @@ int main()
 
     auto frames = parser.parse("../MagicLake.xml");
 
-    for (const auto& frame : frames)
+    WallpaperScheduler scheduler;
+
+    auto currentWallpaper =
+        scheduler.getCurrentWallpaper(frames, 20000);
+
+    if (currentWallpaper)
     {
+        std::cout << "Current Wallpaper\n";
         std::cout << "Image: "
-                  << frame.getImagePath()
-                  << std::endl;
+                  << currentWallpaper->getImagePath()
+                  << '\n';
 
         std::cout << "Duration: "
-                  << frame.getDuration()
-                  << std::endl;
-
-        std::cout << "-----------------------"
-                  << std::endl;
+                  << currentWallpaper->getDuration()
+                  << '\n';
+    }
+    else
+    {
+        std::cout << "No wallpaper found.\n";
     }
 
     return 0;
