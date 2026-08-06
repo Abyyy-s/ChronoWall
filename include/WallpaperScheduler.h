@@ -2,12 +2,13 @@
 #define WALLPAPERSCHEDULER_H
 
 #include <vector>
+#include <optional>
 #include "WallpaperFrame.h"
 
 class WallpaperScheduler
 {
 public:
-    WallpaperFrame getCurrentWallpaper(
+    std::optional<WallpaperFrame> getCurrentWallpaper(
         const std::vector<WallpaperFrame> &frames,
         int elapsedSeconds);
 };
