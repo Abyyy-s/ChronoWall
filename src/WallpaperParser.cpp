@@ -1,83 +1,118 @@
 #include "WallpaperParser.h"
-#include <tinyxml2.h>
+
 #include <iostream>
 #include <string>
+#include <tinyxml2.h>
 #include <vector>
 
-
-std::vector<WallpaperFrame> WallpaperParser::parse(std::string xmlPath)
+DynamicWallpaper WallpaperParser::parse(std::string xmlPath)
 {
-    
+    DynamicWallpaper wallpaper;
     std::vector<WallpaperFrame> frames;
 
     tinyxml2::XMLDocument doc;
 
     if (doc.LoadFile(xmlPath.c_str()) != tinyxml2::XML_SUCCESS)
     {
-        
-        std::cerr << "Failed to load XML file: " << xmlPath << '\n';
-        return frames;
+        std::cerr << "Failed to load XML file: "
+                  << xmlPath << '\n';
+        return wallpaper;
     }
 
-    tinyxml2::XMLElement* root =
+    tinyxml2::XMLElement *root =
         doc.FirstChildElement("background");
 
     if (root == nullptr)
     {
         std::cerr << "No <background> element found.\n";
-        return frames;
+        return wallpaper;
     }
 
-    tinyxml2::XMLElement* wallpaper =
+    // -----------------------------
+    // Parse <starttime>
+    // -----------------------------
+
+    tinyxml2::XMLElement *startTime =
+        root->FirstChildElement("starttime");
+
+    if (startTime != nullptr)
+    {
+        tinyxml2::XMLElement *hour =
+            startTime->FirstChildElement("hour");
+
+        tinyxml2::XMLElement *minute =
+            startTime->FirstChildElement("minute");
+
+        tinyxml2::XMLElement *second =
+            startTime->FirstChildElement("second");
+
+        if (hour && minute && second)
+        {
+            int startTimeSeconds =
+                std::stoi(hour->GetText()) * 3600 +
+                std::stoi(minute->GetText()) * 60 +
+                std::stoi(second->GetText());
+
+            wallpaper.setStartTime(startTimeSeconds);
+        }
+    }
+
+    // -----------------------------
+    // Parse <static> elements
+    // -----------------------------
+
+    tinyxml2::XMLElement *wallpaperElement =
         root->FirstChildElement("static");
 
-    while (wallpaper != nullptr)
+    while (wallpaperElement != nullptr)
     {
-        tinyxml2::XMLElement* duration =
-            wallpaper->FirstChildElement("duration");
+        tinyxml2::XMLElement *duration =
+            wallpaperElement->FirstChildElement("duration");
 
         if (duration == nullptr)
         {
             std::cerr << "Missing <duration> element.\n";
-            return frames;
+            return wallpaper;
         }
 
-        const char* durationText = duration->GetText();
-
-        if (durationText == nullptr)
-        {
-            std::cerr << "Duration element is empty.\n";
-            return frames;
-        }
-
-        double durationValue =
-            std::stod(durationText);
-
-        tinyxml2::XMLElement* file =
-            wallpaper->FirstChildElement("file");
+        tinyxml2::XMLElement *file =
+            wallpaperElement->FirstChildElement("file");
 
         if (file == nullptr)
         {
             std::cerr << "Missing <file> element.\n";
-            return frames;
+            return wallpaper;
         }
 
-        const char* fileText = file->GetText();
-
-        if (fileText == nullptr)
+        if (duration->GetText() == nullptr)
         {
-            std::cerr << "File element is empty.\n";
-            return frames;
+            std::cerr << "Empty <duration>.\n";
+            return wallpaper;
         }
 
-        std::string imagePath = fileText;
+        if (file->GetText() == nullptr)
+        {
+            std::cerr << "Empty <file>.\n";
+            return wallpaper;
+        }
 
-        WallpaperFrame frame(imagePath, durationValue);
+        double durationValue =
+            std::stod(duration->GetText());
+
+        std::string imagePath =
+            file->GetText();
+
+        WallpaperFrame frame(
+            imagePath,
+            durationValue);
 
         frames.push_back(frame);
 
-        wallpaper = wallpaper->NextSiblingElement("static");
+        wallpaperElement =
+            wallpaperElement->NextSiblingElement("static");
     }
 
-    return frames;
+    wallpaper.setFrames(frames);
+
+    return wallpaper;
 }

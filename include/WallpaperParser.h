@@ -6,11 +6,12 @@
 #include <string>
 #include <vector>
 #include "WallpaperFrame.h"
+#include "DynamicWallpaper.h"
 
 class WallpaperParser
 {
 public:
-    std::vector<WallpaperFrame> parse(std::string xmlPath);
+    DynamicWallpaper parse(std::string xmlPath);
 };
 
 #endif

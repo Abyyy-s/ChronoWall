@@ -129,6 +129,30 @@ ChronoWall/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/build
 .PHONY : ChronoWall/fast
 
+src/DynamicWallpaper.o: src/DynamicWallpaper.cpp.o
+.PHONY : src/DynamicWallpaper.o
+
+# target to build an object file
+src/DynamicWallpaper.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o
+.PHONY : src/DynamicWallpaper.cpp.o
+
+src/DynamicWallpaper.i: src/DynamicWallpaper.cpp.i
+.PHONY : src/DynamicWallpaper.i
+
+# target to preprocess a source file
+src/DynamicWallpaper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.i
+.PHONY : src/DynamicWallpaper.cpp.i
+
+src/DynamicWallpaper.s: src/DynamicWallpaper.cpp.s
+.PHONY : src/DynamicWallpaper.s
+
+# target to generate assembly for a file
+src/DynamicWallpaper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.s
+.PHONY : src/DynamicWallpaper.cpp.s
+
 src/WallpaperChanger.o: src/WallpaperChanger.cpp.o
 .PHONY : src/WallpaperChanger.o
 
@@ -258,6 +282,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... ChronoWall"
+	@echo "... src/DynamicWallpaper.o"
+	@echo "... src/DynamicWallpaper.i"
+	@echo "... src/DynamicWallpaper.s"
 	@echo "... src/WallpaperChanger.o"
 	@echo "... src/WallpaperChanger.i"
 	@echo "... src/WallpaperChanger.s"
