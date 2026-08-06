@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o.d"
   "CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o"
   "CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o.d"
+  "CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o"
+  "CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o.d"
   "CMakeFiles/ChronoWall.dir/src/main.cpp.o"
   "CMakeFiles/ChronoWall.dir/src/main.cpp.o.d"
   "ChronoWall"

@@ -177,6 +177,30 @@ src/WallpaperParser.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.s
 .PHONY : src/WallpaperParser.cpp.s
 
+src/WallpaperScheduler.o: src/WallpaperScheduler.cpp.o
+.PHONY : src/WallpaperScheduler.o
+
+# target to build an object file
+src/WallpaperScheduler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o
+.PHONY : src/WallpaperScheduler.cpp.o
+
+src/WallpaperScheduler.i: src/WallpaperScheduler.cpp.i
+.PHONY : src/WallpaperScheduler.i
+
+# target to preprocess a source file
+src/WallpaperScheduler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.i
+.PHONY : src/WallpaperScheduler.cpp.i
+
+src/WallpaperScheduler.s: src/WallpaperScheduler.cpp.s
+.PHONY : src/WallpaperScheduler.s
+
+# target to generate assembly for a file
+src/WallpaperScheduler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.s
+.PHONY : src/WallpaperScheduler.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -216,6 +240,9 @@ help:
 	@echo "... src/WallpaperParser.o"
 	@echo "... src/WallpaperParser.i"
 	@echo "... src/WallpaperParser.s"
+	@echo "... src/WallpaperScheduler.o"
+	@echo "... src/WallpaperScheduler.i"
+	@echo "... src/WallpaperScheduler.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

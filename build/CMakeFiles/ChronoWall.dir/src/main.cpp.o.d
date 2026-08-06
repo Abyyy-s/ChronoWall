@@ -122,12 +122,15 @@ CMakeFiles/ChronoWall.dir/src/main.cpp.o: \
  /usr/include/c++/14/bits/stl_bvector.h \
  /usr/include/c++/14/bits/vector.tcc \
  /home/aby/Projects/ChronoWall/include/WallpaperFrame.h \
- /usr/include/c++/14/iostream /usr/include/c++/14/ostream \
- /usr/include/c++/14/ios /usr/include/c++/14/exception \
+ /home/aby/Projects/ChronoWall/include/WallpaperScheduler.h \
+ /usr/include/c++/14/optional /usr/include/c++/14/exception \
  /usr/include/c++/14/bits/exception_ptr.h \
  /usr/include/c++/14/bits/cxxabi_init_exception.h \
  /usr/include/c++/14/typeinfo /usr/include/c++/14/bits/nested_exception.h \
- /usr/include/c++/14/bits/ios_base.h /usr/include/c++/14/ext/atomicity.h \
+ /usr/include/c++/14/bits/enable_special_members.h \
+ /usr/include/c++/14/iostream /usr/include/c++/14/ostream \
+ /usr/include/c++/14/ios /usr/include/c++/14/bits/ios_base.h \
+ /usr/include/c++/14/ext/atomicity.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr-default.h \
  /usr/include/pthread.h /usr/include/sched.h \

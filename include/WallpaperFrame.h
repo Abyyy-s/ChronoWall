@@ -7,13 +7,13 @@ class WallpaperFrame
 {
 private:
     std::string imagePath;
-    double duration;
+    int duration;
 
 public:
-    WallpaperFrame(std::string imagePath, double duration);
+    WallpaperFrame(std::string imagePath, int duration);
 
     std::string getImagePath() const;
-    double getDuration() const;
+    int getDuration() const;
 };
 
 #endif
