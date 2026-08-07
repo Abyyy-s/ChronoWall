@@ -1,7 +1,7 @@
 CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o: \
- /home/aby/Projects/ChronoWall/src/WallpaperParser.cpp \
+ /home/aby/Untitled\ Folder/ChronoWall/src/WallpaperParser.cpp \
  /usr/include/stdc-predef.h \
- /home/aby/Projects/ChronoWall/include/WallpaperParser.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperParser.h \
  /usr/include/c++/14/string /usr/include/c++/14/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
@@ -122,10 +122,10 @@ CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o: \
  /usr/include/c++/14/bits/stl_vector.h \
  /usr/include/c++/14/bits/stl_bvector.h \
  /usr/include/c++/14/bits/vector.tcc \
- /home/aby/Projects/ChronoWall/include/WallpaperFrame.h \
- /home/aby/Projects/ChronoWall/include/DynamicWallpaper.h \
- /home/aby/Projects/ChronoWall/include/Transition.h \
- /home/aby/Projects/ChronoWall/include/TimelineEvent.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperFrame.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/DynamicWallpaper.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/Transition.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/TimelineEvent.h \
  /usr/include/c++/14/iostream /usr/include/c++/14/ostream \
  /usr/include/c++/14/ios /usr/include/c++/14/exception \
  /usr/include/c++/14/bits/exception_ptr.h \
@@ -176,4 +176,4 @@ CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o: \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /home/aby/Projects/ChronoWall/include/Transition.h
+ /home/aby/Untitled\ Folder/ChronoWall/include/Transition.h

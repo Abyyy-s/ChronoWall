@@ -1,6 +1,7 @@
 CMakeFiles/ChronoWall.dir/src/main.cpp.o: \
- /home/aby/Projects/ChronoWall/src/main.cpp /usr/include/stdc-predef.h \
- /home/aby/Projects/ChronoWall/include/DynamicWallpaper.h \
+ /home/aby/Untitled\ Folder/ChronoWall/src/main.cpp \
+ /usr/include/stdc-predef.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/DynamicWallpaper.h \
  /usr/include/c++/14/vector /usr/include/c++/14/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
@@ -52,7 +53,7 @@ CMakeFiles/ChronoWall.dir/src/main.cpp.o: \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stddef.h \
  /usr/include/c++/14/bits/uses_allocator.h \
  /usr/include/c++/14/bits/uses_allocator_args.h /usr/include/c++/14/tuple \
- /home/aby/Projects/ChronoWall/include/WallpaperFrame.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperFrame.h \
  /usr/include/c++/14/string /usr/include/c++/14/bits/stringfwd.h \
  /usr/include/c++/14/bits/char_traits.h \
  /usr/include/c++/14/bits/postypes.h /usr/include/c++/14/cwchar \
@@ -120,12 +121,12 @@ CMakeFiles/ChronoWall.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/14/bits/charconv.h \
  /usr/include/c++/14/bits/basic_string.tcc \
- /home/aby/Projects/ChronoWall/include/Transition.h \
- /home/aby/Projects/ChronoWall/include/TimelineEvent.h \
- /home/aby/Projects/ChronoWall/include/WallpaperChanger.h \
- /home/aby/Projects/ChronoWall/include/WallpaperParser.h \
- /home/aby/Projects/ChronoWall/include/DynamicWallpaper.h \
- /home/aby/Projects/ChronoWall/include/WallpaperScheduler.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/Transition.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/TimelineEvent.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperChanger.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperParser.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/DynamicWallpaper.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperScheduler.h \
  /usr/include/c++/14/chrono /usr/include/c++/14/bits/chrono.h \
  /usr/include/c++/14/ratio /usr/include/c++/14/cstdint \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \

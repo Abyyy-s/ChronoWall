@@ -1,7 +1,7 @@
 CMakeFiles/ChronoWall.dir/src/Transition.cpp.o: \
- /home/aby/Projects/ChronoWall/src/Transition.cpp \
+ /home/aby/Untitled\ Folder/ChronoWall/src/Transition.cpp \
  /usr/include/stdc-predef.h \
- /home/aby/Projects/ChronoWall/include/Transition.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/Transition.h \
  /usr/include/c++/14/string /usr/include/c++/14/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \

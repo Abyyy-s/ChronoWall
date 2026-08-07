@@ -22,25 +22,6 @@ int main(int argc, char *argv[])
     DynamicWallpaper wallpaper =
         parser.parse(xmlPath);
 
-    std::cout << "\nTransitions\n";
-    std::cout << "====================\n";
-
-    for (const Transition &transition : wallpaper.getTransitions())
-    {
-        std::cout << "From: "
-                  << transition.getFromImage()
-                  << '\n';
-
-        std::cout << "To: "
-                  << transition.getToImage()
-                  << '\n';
-
-        std::cout << "Duration: "
-                  << transition.getDuration()
-                  << '\n';
-
-        std::cout << "---------------------\n";
-    }
 
     auto now = std::chrono::system_clock::now();
 
@@ -78,31 +59,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::cout << "Current Time: "
-              << localTime->tm_hour << ":"
-              << localTime->tm_min << ":"
-              << localTime->tm_sec << '\n';
-
-    std::cout << "Start Time (seconds): "
-              << wallpaper.getStartTime()
-              << '\n';
-
-    std::cout << "Elapsed Seconds: "
-              << elapsedSeconds
-              << '\n';
-
     if (event->getType() == TimelineEventType::Static)
     {
         const WallpaperFrame &frame =
             wallpaper.getFrames()[event->getFrameIndex()];
 
-        std::cout << "Selected Image: "
-                  << frame.getImagePath()
-                  << '\n';
-
-        std::cout << "Duration: "
-                  << frame.getDuration()
-                  << '\n';
 
         WallpaperChanger changer;
 
@@ -113,19 +74,6 @@ int main(int argc, char *argv[])
         const Transition &transition =
             wallpaper.getTransitions()[event->getTransitionIndex()];
 
-        std::cout << "Transition\n";
-
-        std::cout << "From: "
-                  << transition.getFromImage()
-                  << '\n';
-
-        std::cout << "To: "
-                  << transition.getToImage()
-                  << '\n';
-
-        std::cout << "Duration: "
-                  << transition.getDuration()
-                  << '\n';
     }
 
     std::cout << "Wallpaper changed successfully!\n";

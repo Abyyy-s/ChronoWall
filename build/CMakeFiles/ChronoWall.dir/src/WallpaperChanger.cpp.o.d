@@ -1,8 +1,8 @@
 CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o: \
- /home/aby/Projects/ChronoWall/src/WallpaperChanger.cpp \
+ /home/aby/Untitled\ Folder/ChronoWall/src/WallpaperChanger.cpp \
  /usr/include/stdc-predef.h \
- /home/aby/Projects/ChronoWall/include/WallpaperChanger.h \
- /home/aby/Projects/ChronoWall/include/WallpaperFrame.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperChanger.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperFrame.h \
  /usr/include/c++/14/string /usr/include/c++/14/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \

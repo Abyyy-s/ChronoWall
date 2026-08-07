@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/aby/Projects/ChronoWall
+CMAKE_SOURCE_DIR = "/home/aby/Untitled Folder/ChronoWall"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/aby/Projects/ChronoWall/build
+CMAKE_BINARY_DIR = "/home/aby/Untitled Folder/ChronoWall/build"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/ChronoWall.dir/depend.make
@@ -70,116 +70,116 @@ include CMakeFiles/ChronoWall.dir/progress.make
 include CMakeFiles/ChronoWall.dir/flags.make
 
 CMakeFiles/ChronoWall.dir/src/main.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/main.cpp.o: /home/aby/Projects/ChronoWall/src/main.cpp
+CMakeFiles/ChronoWall.dir/src/main.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/main.cpp
 CMakeFiles/ChronoWall.dir/src/main.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ChronoWall.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/main.cpp.o -MF CMakeFiles/ChronoWall.dir/src/main.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/main.cpp.o -c /home/aby/Projects/ChronoWall/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ChronoWall.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/main.cpp.o -MF CMakeFiles/ChronoWall.dir/src/main.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/main.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/main.cpp"
 
 CMakeFiles/ChronoWall.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/main.cpp > CMakeFiles/ChronoWall.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/main.cpp" > CMakeFiles/ChronoWall.dir/src/main.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/main.cpp -o CMakeFiles/ChronoWall.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/main.cpp" -o CMakeFiles/ChronoWall.dir/src/main.cpp.s
 
 CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o: /home/aby/Projects/ChronoWall/src/WallpaperFrame.cpp
+CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/WallpaperFrame.cpp
 CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o -c /home/aby/Projects/ChronoWall/src/WallpaperFrame.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/WallpaperFrame.cpp"
 
 CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/WallpaperFrame.cpp > CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/WallpaperFrame.cpp" > CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/WallpaperFrame.cpp -o CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/WallpaperFrame.cpp" -o CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.s
 
 CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o: /home/aby/Projects/ChronoWall/src/WallpaperParser.cpp
+CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/WallpaperParser.cpp
 CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o -c /home/aby/Projects/ChronoWall/src/WallpaperParser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/WallpaperParser.cpp"
 
 CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/WallpaperParser.cpp > CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/WallpaperParser.cpp" > CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/WallpaperParser.cpp -o CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/WallpaperParser.cpp" -o CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.s
 
 CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o: /home/aby/Projects/ChronoWall/src/WallpaperScheduler.cpp
+CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/WallpaperScheduler.cpp
 CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o -c /home/aby/Projects/ChronoWall/src/WallpaperScheduler.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/WallpaperScheduler.cpp"
 
 CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/WallpaperScheduler.cpp > CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/WallpaperScheduler.cpp" > CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/WallpaperScheduler.cpp -o CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/WallpaperScheduler.cpp" -o CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.s
 
 CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o: /home/aby/Projects/ChronoWall/src/WallpaperChanger.cpp
+CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/WallpaperChanger.cpp
 CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o -c /home/aby/Projects/ChronoWall/src/WallpaperChanger.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o -MF CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/WallpaperChanger.cpp"
 
 CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/WallpaperChanger.cpp > CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/WallpaperChanger.cpp" > CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/WallpaperChanger.cpp -o CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/WallpaperChanger.cpp" -o CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.s
 
 CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o: /home/aby/Projects/ChronoWall/src/DynamicWallpaper.cpp
+CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/DynamicWallpaper.cpp
 CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o -MF CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o -c /home/aby/Projects/ChronoWall/src/DynamicWallpaper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o -MF CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/DynamicWallpaper.cpp"
 
 CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/DynamicWallpaper.cpp > CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/DynamicWallpaper.cpp" > CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/DynamicWallpaper.cpp -o CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/DynamicWallpaper.cpp" -o CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.s
 
 CMakeFiles/ChronoWall.dir/src/Transition.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/Transition.cpp.o: /home/aby/Projects/ChronoWall/src/Transition.cpp
+CMakeFiles/ChronoWall.dir/src/Transition.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/Transition.cpp
 CMakeFiles/ChronoWall.dir/src/Transition.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ChronoWall.dir/src/Transition.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/Transition.cpp.o -MF CMakeFiles/ChronoWall.dir/src/Transition.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/Transition.cpp.o -c /home/aby/Projects/ChronoWall/src/Transition.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ChronoWall.dir/src/Transition.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/Transition.cpp.o -MF CMakeFiles/ChronoWall.dir/src/Transition.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/Transition.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/Transition.cpp"
 
 CMakeFiles/ChronoWall.dir/src/Transition.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/Transition.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/Transition.cpp > CMakeFiles/ChronoWall.dir/src/Transition.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/Transition.cpp" > CMakeFiles/ChronoWall.dir/src/Transition.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/Transition.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/Transition.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/Transition.cpp -o CMakeFiles/ChronoWall.dir/src/Transition.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/Transition.cpp" -o CMakeFiles/ChronoWall.dir/src/Transition.cpp.s
 
 CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o: CMakeFiles/ChronoWall.dir/flags.make
-CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o: /home/aby/Projects/ChronoWall/src/TimelineEvent.cpp
+CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o: /home/aby/Untitled\ Folder/ChronoWall/src/TimelineEvent.cpp
 CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o: CMakeFiles/ChronoWall.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o -MF CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o -c /home/aby/Projects/ChronoWall/src/TimelineEvent.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o -MF CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o.d -o CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o -c "/home/aby/Untitled Folder/ChronoWall/src/TimelineEvent.cpp"
 
 CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aby/Projects/ChronoWall/src/TimelineEvent.cpp > CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/aby/Untitled Folder/ChronoWall/src/TimelineEvent.cpp" > CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.i
 
 CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aby/Projects/ChronoWall/src/TimelineEvent.cpp -o CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/aby/Untitled Folder/ChronoWall/src/TimelineEvent.cpp" -o CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.s
 
 # Object files for target ChronoWall
 ChronoWall_OBJECTS = \
@@ -206,7 +206,7 @@ ChronoWall: CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o
 ChronoWall: CMakeFiles/ChronoWall.dir/build.make
 ChronoWall: /usr/lib/x86_64-linux-gnu/libtinyxml2.so.10.0.0
 ChronoWall: CMakeFiles/ChronoWall.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/aby/Projects/ChronoWall/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable ChronoWall"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable ChronoWall"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ChronoWall.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -218,6 +218,6 @@ CMakeFiles/ChronoWall.dir/clean:
 .PHONY : CMakeFiles/ChronoWall.dir/clean
 
 CMakeFiles/ChronoWall.dir/depend:
-	cd /home/aby/Projects/ChronoWall/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/aby/Projects/ChronoWall /home/aby/Projects/ChronoWall /home/aby/Projects/ChronoWall/build /home/aby/Projects/ChronoWall/build /home/aby/Projects/ChronoWall/build/CMakeFiles/ChronoWall.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd "/home/aby/Untitled Folder/ChronoWall/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/aby/Untitled Folder/ChronoWall" "/home/aby/Untitled Folder/ChronoWall" "/home/aby/Untitled Folder/ChronoWall/build" "/home/aby/Untitled Folder/ChronoWall/build" "/home/aby/Untitled Folder/ChronoWall/build/CMakeFiles/ChronoWall.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/ChronoWall.dir/depend
 

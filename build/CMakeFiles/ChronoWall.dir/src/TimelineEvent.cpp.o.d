@@ -1,8 +1,8 @@
 CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o: \
- /home/aby/Projects/ChronoWall/src/TimelineEvent.cpp \
+ /home/aby/Untitled\ Folder/ChronoWall/src/TimelineEvent.cpp \
  /usr/include/stdc-predef.h \
- /home/aby/Projects/ChronoWall/include/TimelineEvent.h \
- /home/aby/Projects/ChronoWall/include/WallpaperFrame.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/TimelineEvent.h \
+ /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperFrame.h \
  /usr/include/c++/14/string /usr/include/c++/14/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
@@ -119,4 +119,4 @@ CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o: \
  /usr/include/c++/14/bits/memory_resource.h /usr/include/c++/14/cstddef \
  /usr/include/c++/14/bits/uses_allocator.h \
  /usr/include/c++/14/bits/uses_allocator_args.h /usr/include/c++/14/tuple \
- /home/aby/Projects/ChronoWall/include/Transition.h
+ /home/aby/Untitled\ Folder/ChronoWall/include/Transition.h
