@@ -153,6 +153,30 @@ src/DynamicWallpaper.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.s
 .PHONY : src/DynamicWallpaper.cpp.s
 
+src/Transition.o: src/Transition.cpp.o
+.PHONY : src/Transition.o
+
+# target to build an object file
+src/Transition.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/Transition.cpp.o
+.PHONY : src/Transition.cpp.o
+
+src/Transition.i: src/Transition.cpp.i
+.PHONY : src/Transition.i
+
+# target to preprocess a source file
+src/Transition.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/Transition.cpp.i
+.PHONY : src/Transition.cpp.i
+
+src/Transition.s: src/Transition.cpp.s
+.PHONY : src/Transition.s
+
+# target to generate assembly for a file
+src/Transition.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ChronoWall.dir/build.make CMakeFiles/ChronoWall.dir/src/Transition.cpp.s
+.PHONY : src/Transition.cpp.s
+
 src/WallpaperChanger.o: src/WallpaperChanger.cpp.o
 .PHONY : src/WallpaperChanger.o
 
@@ -285,6 +309,9 @@ help:
 	@echo "... src/DynamicWallpaper.o"
 	@echo "... src/DynamicWallpaper.i"
 	@echo "... src/DynamicWallpaper.s"
+	@echo "... src/Transition.o"
+	@echo "... src/Transition.i"
+	@echo "... src/Transition.s"
 	@echo "... src/WallpaperChanger.o"
 	@echo "... src/WallpaperChanger.i"
 	@echo "... src/WallpaperChanger.s"

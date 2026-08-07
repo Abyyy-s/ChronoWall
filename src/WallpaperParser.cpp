@@ -4,11 +4,13 @@
 #include <string>
 #include <tinyxml2.h>
 #include <vector>
+#include "Transition.h"
 
 DynamicWallpaper WallpaperParser::parse(std::string xmlPath)
 {
     DynamicWallpaper wallpaper;
     std::vector<WallpaperFrame> frames;
+    std::vector<Transition> transitions;
 
     tinyxml2::XMLDocument doc;
 
@@ -112,7 +114,83 @@ DynamicWallpaper WallpaperParser::parse(std::string xmlPath)
             wallpaperElement->NextSiblingElement("static");
     }
 
+    // -----------------------------
+    // Parse <transition> elements
+    // -----------------------------
+
+    tinyxml2::XMLElement *transitionElement =
+        root->FirstChildElement("transition");
+
+    while (transitionElement != nullptr)
+    {
+        tinyxml2::XMLElement *duration =
+            transitionElement->FirstChildElement("duration");
+
+        if (duration == nullptr)
+        {
+            std::cerr << "Missing <duration> element.\n";
+            return wallpaper;
+        }
+
+        tinyxml2::XMLElement *from =
+            transitionElement->FirstChildElement("from");
+
+        if (from == nullptr)
+        {
+            std::cerr << "Missing <from> element.\n";
+            return wallpaper;
+        }
+
+        tinyxml2::XMLElement *to =
+            transitionElement->FirstChildElement("to");
+
+        if (to == nullptr)
+        {
+            std::cerr << "Missing <to> element.\n";
+            return wallpaper;
+        }
+
+        if (duration->GetText() == nullptr)
+        {
+            std::cerr << "Empty <duration>.\n";
+            return wallpaper;
+        }
+
+        if (from->GetText() == nullptr)
+        {
+            std::cerr << "Empty <from>.\n";
+            return wallpaper;
+        }
+
+        if (to->GetText() == nullptr)
+        {
+            std::cerr << "Empty <to>.\n";
+            return wallpaper;
+        }
+
+        double durationValue =
+            std::stod(duration->GetText());
+
+        std::string fromImage =
+            from->GetText();
+
+        std::string toImage =
+            to->GetText();
+
+        Transition transition(
+            fromImage,
+            toImage,
+            durationValue);
+
+        transitions.push_back(transition);
+
+        transitionElement =
+            transitionElement->NextSiblingElement("transition");
+    }
+
     wallpaper.setFrames(frames);
+
+    wallpaper.setTransitions(transitions);
 
     return wallpaper;
 }

@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/aby/Projects/ChronoWall/src/DynamicWallpaper.cpp" "CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o" "gcc" "CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o.d"
+  "/home/aby/Projects/ChronoWall/src/Transition.cpp" "CMakeFiles/ChronoWall.dir/src/Transition.cpp.o" "gcc" "CMakeFiles/ChronoWall.dir/src/Transition.cpp.o.d"
   "/home/aby/Projects/ChronoWall/src/WallpaperChanger.cpp" "CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o" "gcc" "CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o.d"
   "/home/aby/Projects/ChronoWall/src/WallpaperFrame.cpp" "CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o" "gcc" "CMakeFiles/ChronoWall.dir/src/WallpaperFrame.cpp.o.d"
   "/home/aby/Projects/ChronoWall/src/WallpaperParser.cpp" "CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o" "gcc" "CMakeFiles/ChronoWall.dir/src/WallpaperParser.cpp.o.d"

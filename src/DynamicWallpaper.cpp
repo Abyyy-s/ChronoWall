@@ -26,3 +26,14 @@ int DynamicWallpaper::getStartTime() const
 {
     return startTimeSeconds;
 }
+void DynamicWallpaper::setTransitions(
+    const std::vector<Transition> &transitions)
+{
+    this->transitions = transitions;
+}
+
+const std::vector<Transition> &
+DynamicWallpaper::getTransitions() const
+{
+    return transitions;
+}

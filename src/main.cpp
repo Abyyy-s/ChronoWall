@@ -22,6 +22,26 @@ int main(int argc, char *argv[])
     DynamicWallpaper wallpaper =
         parser.parse(xmlPath);
 
+    std::cout << "\nTransitions\n";
+    std::cout << "====================\n";
+
+    for (const Transition &transition : wallpaper.getTransitions())
+    {
+        std::cout << "From: "
+                  << transition.getFromImage()
+                  << '\n';
+
+        std::cout << "To: "
+                  << transition.getToImage()
+                  << '\n';
+
+        std::cout << "Duration: "
+                  << transition.getDuration()
+                  << '\n';
+
+        std::cout << "---------------------\n";
+    }
+
     auto now = std::chrono::system_clock::now();
 
     std::time_t currentTime =
