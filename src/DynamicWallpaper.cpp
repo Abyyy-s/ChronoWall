@@ -32,6 +32,18 @@ void DynamicWallpaper::setTransitions(
     this->transitions = transitions;
 }
 
+void DynamicWallpaper::setTimeline(
+    const std::vector<TimelineEvent> &timeline)
+{
+    this->timeline = timeline;
+}
+
+const std::vector<TimelineEvent> &
+DynamicWallpaper::getTimeline() const
+{
+    return timeline;
+}
+
 const std::vector<Transition> &
 DynamicWallpaper::getTransitions() const
 {

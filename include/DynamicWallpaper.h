@@ -4,6 +4,7 @@
 #include <vector>
 #include "WallpaperFrame.h"
 #include "Transition.h"
+#include "TimelineEvent.h"
 
 class DynamicWallpaper
 {
@@ -11,6 +12,8 @@ private:
     std::vector<WallpaperFrame> frames;
 
     std::vector<Transition> transitions;
+
+    std::vector<TimelineEvent> timeline;
 
     int startTimeSeconds;
 
@@ -30,6 +33,12 @@ public:
 
     const std::vector<Transition> &
     getTransitions() const;
+
+    void setTimeline(
+        const std::vector<TimelineEvent> &timeline);
+
+    const std::vector<TimelineEvent> &
+    getTimeline() const;
 };
 
 #endif

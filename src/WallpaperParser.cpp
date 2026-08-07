@@ -6,6 +6,65 @@
 #include <vector>
 #include "Transition.h"
 
+std::vector<TimelineEvent> buildTimeline(
+    const std::vector<WallpaperFrame> &frames,
+    const std::vector<Transition> &transitions,
+    tinyxml2::XMLElement *root)
+{
+    std::vector<TimelineEvent> timeline;
+
+    double currentTime = 0.0;
+
+    int frameIndex = 0;
+    int transitionIndex = 0;
+
+    tinyxml2::XMLElement *element =
+        root->FirstChildElement();
+
+    while (element != nullptr)
+    {
+        std::string tag = element->Name();
+
+        if (tag == "static")
+        {
+            double duration =
+                frames[frameIndex].getDuration();
+
+            timeline.emplace_back(
+                currentTime,
+                currentTime + duration,
+                TimelineEventType::Static,
+                frameIndex,
+                -1);
+
+            currentTime += duration;
+
+            frameIndex++;
+        }
+        else if (tag == "transition")
+        {
+            double duration =
+                transitions[transitionIndex].getDuration();
+
+            timeline.emplace_back(
+                currentTime,
+                currentTime + duration,
+                TimelineEventType::Transition,
+                -1,
+                transitionIndex);
+
+            currentTime += duration;
+
+            transitionIndex++;
+        }
+
+        element =
+            element->NextSiblingElement();
+    }
+
+    return timeline;
+}
+
 DynamicWallpaper WallpaperParser::parse(std::string xmlPath)
 {
     DynamicWallpaper wallpaper;
@@ -188,9 +247,14 @@ DynamicWallpaper WallpaperParser::parse(std::string xmlPath)
             transitionElement->NextSiblingElement("transition");
     }
 
+    std::vector<TimelineEvent> timeline =
+        buildTimeline(frames, transitions, root);
+
     wallpaper.setFrames(frames);
 
     wallpaper.setTransitions(transitions);
+
+    wallpaper.setTimeline(timeline);
 
     return wallpaper;
 }

@@ -121,15 +121,11 @@ CMakeFiles/ChronoWall.dir/src/main.cpp.o: \
  /usr/include/c++/14/bits/charconv.h \
  /usr/include/c++/14/bits/basic_string.tcc \
  /home/aby/Projects/ChronoWall/include/Transition.h \
+ /home/aby/Projects/ChronoWall/include/TimelineEvent.h \
  /home/aby/Projects/ChronoWall/include/WallpaperChanger.h \
  /home/aby/Projects/ChronoWall/include/WallpaperParser.h \
  /home/aby/Projects/ChronoWall/include/DynamicWallpaper.h \
  /home/aby/Projects/ChronoWall/include/WallpaperScheduler.h \
- /usr/include/c++/14/optional /usr/include/c++/14/exception \
- /usr/include/c++/14/bits/exception_ptr.h \
- /usr/include/c++/14/bits/cxxabi_init_exception.h \
- /usr/include/c++/14/typeinfo /usr/include/c++/14/bits/nested_exception.h \
- /usr/include/c++/14/bits/enable_special_members.h \
  /usr/include/c++/14/chrono /usr/include/c++/14/bits/chrono.h \
  /usr/include/c++/14/ratio /usr/include/c++/14/cstdint \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
@@ -142,6 +138,9 @@ CMakeFiles/ChronoWall.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
  /usr/include/c++/14/bits/parse_numbers.h /usr/include/c++/14/iostream \
  /usr/include/c++/14/ostream /usr/include/c++/14/ios \
+ /usr/include/c++/14/exception /usr/include/c++/14/bits/exception_ptr.h \
+ /usr/include/c++/14/bits/cxxabi_init_exception.h \
+ /usr/include/c++/14/typeinfo /usr/include/c++/14/bits/nested_exception.h \
  /usr/include/c++/14/bits/ios_base.h /usr/include/c++/14/ext/atomicity.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/gthr-default.h \

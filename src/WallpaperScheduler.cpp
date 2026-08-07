@@ -1,32 +1,31 @@
 #include "WallpaperScheduler.h"
+#include <cmath>
 
-std::optional<WallpaperFrame> WallpaperScheduler::getCurrentWallpaper(
-    const std::vector<WallpaperFrame> &frames,
-    int elapsedSeconds)
+const TimelineEvent *WallpaperScheduler::getCurrentEvent(
+    const DynamicWallpaper &wallpaper,
+    double elapsedSeconds)
 {
-    if (frames.empty())
+    const auto &timeline = wallpaper.getTimeline();
+
+    if (timeline.empty())
     {
-        return std::nullopt;
+        return nullptr;
     }
 
-    int totalDuration = 0;
+    double totalDuration =
+        timeline.back().getEndTime();
 
-    for (const auto &frame : frames)
+    elapsedSeconds =
+        std::fmod(elapsedSeconds, totalDuration);
+
+    for (const auto &event : timeline)
     {
-        totalDuration += frame.getDuration();
-    }
-
-    elapsedSeconds %= totalDuration;
-
-    for (const auto &frame : frames)
-    {
-        if (elapsedSeconds < frame.getDuration())
+        if (elapsedSeconds >= event.getStartTime() &&
+            elapsedSeconds < event.getEndTime())
         {
-            return frame;
+            return &event;
         }
-
-        elapsedSeconds -= frame.getDuration();
     }
 
-    return frames.back();
+    return &timeline.back();
 }

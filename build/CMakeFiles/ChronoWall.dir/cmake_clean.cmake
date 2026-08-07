@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o"
   "CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o.d"
+  "CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o"
+  "CMakeFiles/ChronoWall.dir/src/TimelineEvent.cpp.o.d"
   "CMakeFiles/ChronoWall.dir/src/Transition.cpp.o"
   "CMakeFiles/ChronoWall.dir/src/Transition.cpp.o.d"
   "CMakeFiles/ChronoWall.dir/src/WallpaperChanger.cpp.o"

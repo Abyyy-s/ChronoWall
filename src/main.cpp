@@ -67,14 +67,14 @@ int main(int argc, char *argv[])
 
     WallpaperScheduler scheduler;
 
-    auto currentWallpaper =
-        scheduler.getCurrentWallpaper(
-            wallpaper.getFrames(),
+    const TimelineEvent *event =
+        scheduler.getCurrentEvent(
+            wallpaper,
             elapsedSeconds);
 
-    if (!currentWallpaper)
+    if (event == nullptr)
     {
-        std::cout << "No wallpaper found.\n";
+        std::cout << "No event found.\n";
         return 1;
     }
 
@@ -91,17 +91,42 @@ int main(int argc, char *argv[])
               << elapsedSeconds
               << '\n';
 
-    std::cout << "Selected Image: "
-              << currentWallpaper->getImagePath()
-              << '\n';
+    if (event->getType() == TimelineEventType::Static)
+    {
+        const WallpaperFrame &frame =
+            wallpaper.getFrames()[event->getFrameIndex()];
 
-    std::cout << "Duration: "
-              << currentWallpaper->getDuration()
-              << '\n';
+        std::cout << "Selected Image: "
+                  << frame.getImagePath()
+                  << '\n';
 
-    WallpaperChanger changer;
+        std::cout << "Duration: "
+                  << frame.getDuration()
+                  << '\n';
 
-    changer.setWallpaper(*currentWallpaper);
+        WallpaperChanger changer;
+
+        changer.setWallpaper(frame);
+    }
+    else
+    {
+        const Transition &transition =
+            wallpaper.getTransitions()[event->getTransitionIndex()];
+
+        std::cout << "Transition\n";
+
+        std::cout << "From: "
+                  << transition.getFromImage()
+                  << '\n';
+
+        std::cout << "To: "
+                  << transition.getToImage()
+                  << '\n';
+
+        std::cout << "Duration: "
+                  << transition.getDuration()
+                  << '\n';
+    }
 
     std::cout << "Wallpaper changed successfully!\n";
 

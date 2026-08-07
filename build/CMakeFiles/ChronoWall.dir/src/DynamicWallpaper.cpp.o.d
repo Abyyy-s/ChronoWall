@@ -121,4 +121,5 @@ CMakeFiles/ChronoWall.dir/src/DynamicWallpaper.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/14/bits/charconv.h \
  /usr/include/c++/14/bits/basic_string.tcc \
- /home/aby/Projects/ChronoWall/include/Transition.h
+ /home/aby/Projects/ChronoWall/include/Transition.h \
+ /home/aby/Projects/ChronoWall/include/TimelineEvent.h

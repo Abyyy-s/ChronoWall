@@ -1,16 +1,15 @@
 #ifndef WALLPAPERSCHEDULER_H
 #define WALLPAPERSCHEDULER_H
 
-#include <vector>
-#include <optional>
-#include "WallpaperFrame.h"
+#include "DynamicWallpaper.h"
+#include "TimelineEvent.h"
 
 class WallpaperScheduler
 {
 public:
-    std::optional<WallpaperFrame> getCurrentWallpaper(
-        const std::vector<WallpaperFrame> &frames,
-        int elapsedSeconds);
+    const TimelineEvent *getCurrentEvent(
+        const DynamicWallpaper &wallpaper,
+        double elapsedSeconds);
 };
 
 #endif
