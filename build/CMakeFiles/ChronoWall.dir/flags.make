@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DTINYXML2_IMPORT -D_FILE_OFFSET_BITS=64
 
-CXX_INCLUDES = -I"/home/aby/Untitled Folder/ChronoWall/include"
+CXX_INCLUDES = -I/home/aby/Projects/ChronoWall/include
 
 CXX_FLAGS = -std=gnu++17
 

@@ -1,8 +1,8 @@
 CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o: \
- /home/aby/Untitled\ Folder/ChronoWall/src/WallpaperScheduler.cpp \
+ /home/aby/Projects/ChronoWall/src/WallpaperScheduler.cpp \
  /usr/include/stdc-predef.h \
- /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperScheduler.h \
- /home/aby/Untitled\ Folder/ChronoWall/include/DynamicWallpaper.h \
+ /home/aby/Projects/ChronoWall/include/WallpaperScheduler.h \
+ /home/aby/Projects/ChronoWall/include/DynamicWallpaper.h \
  /usr/include/c++/14/vector /usr/include/c++/14/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
@@ -54,7 +54,7 @@ CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o: \
  /usr/lib/gcc/x86_64-linux-gnu/14/include/stddef.h \
  /usr/include/c++/14/bits/uses_allocator.h \
  /usr/include/c++/14/bits/uses_allocator_args.h /usr/include/c++/14/tuple \
- /home/aby/Untitled\ Folder/ChronoWall/include/WallpaperFrame.h \
+ /home/aby/Projects/ChronoWall/include/WallpaperFrame.h \
  /usr/include/c++/14/string /usr/include/c++/14/bits/stringfwd.h \
  /usr/include/c++/14/bits/char_traits.h \
  /usr/include/c++/14/bits/postypes.h /usr/include/c++/14/cwchar \
@@ -122,8 +122,8 @@ CMakeFiles/ChronoWall.dir/src/WallpaperScheduler.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/14/bits/charconv.h \
  /usr/include/c++/14/bits/basic_string.tcc \
- /home/aby/Untitled\ Folder/ChronoWall/include/Transition.h \
- /home/aby/Untitled\ Folder/ChronoWall/include/TimelineEvent.h \
+ /home/aby/Projects/ChronoWall/include/Transition.h \
+ /home/aby/Projects/ChronoWall/include/TimelineEvent.h \
  /usr/include/c++/14/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
