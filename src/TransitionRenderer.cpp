@@ -6,51 +6,39 @@
 #include <chrono>
 #include <iostream>
 
-bool TransitionRenderer::render(const Transition &transition) const
+bool TransitionRenderer::init(IDesktopSurface &surface)
 {
-    // Linux/X11: make the renderer window a desktop-layer window.
-    // SDL ignores this hint on platforms where it is not applicable.
-    SDL_SetHint(SDL_HINT_X11_WINDOW_TYPE, "_NET_WM_WINDOW_TYPE_DESKTOP");
-
-    if (!SDL_Init(SDL_INIT_VIDEO))
+    if (!surface.getWindow())
     {
-        std::cerr << "SDL initialization failed: "
-                  << SDL_GetError() << '\n';
+        std::cerr << "Transition renderer: desktop surface has no window.\n";
         return false;
     }
 
-    // Fullscreen desktop resolution, borderless, and non-focusable.
-    // The desktop window type keeps this surface underneath normal windows
-    // while still allowing desktop icons/widgets to remain visible above it.
-    SDL_Window *window = SDL_CreateWindow(
-        "ChronoWall Transition",
-        1280,
-        720,
-        SDL_WINDOW_FULLSCREEN |
-        SDL_WINDOW_BORDERLESS |
-        SDL_WINDOW_NOT_FOCUSABLE);
-
-    if (!window)
-    {
-        std::cerr << "Window creation failed: "
-                  << SDL_GetError() << '\n';
-        SDL_Quit();
-        return false;
-    }
-
-    SDL_Renderer *renderer =
-        SDL_CreateGPURenderer(nullptr, window);
+    renderer = SDL_CreateGPURenderer(nullptr, surface.getWindow());
 
     if (!renderer)
     {
         std::cerr << "GPU renderer creation failed: "
                   << SDL_GetError() << '\n';
-        SDL_DestroyWindow(window);
-        SDL_Quit();
         return false;
     }
 
-    SDL_SetRenderVSync(renderer, 1);
+    if (!SDL_SetRenderVSync(renderer, 1))
+    {
+        std::cerr << "Warning: VSync could not be enabled: "
+                  << SDL_GetError() << '\n';
+    }
+
+    return true;
+}
+
+bool TransitionRenderer::render(const Transition &transition)
+{
+    if (!renderer)
+    {
+        std::cerr << "Transition renderer is not initialized.\n";
+        return false;
+    }
 
     SDL_Surface *fromSurface =
         SDL_LoadSurface(transition.getFromImage().c_str());
@@ -66,10 +54,6 @@ bool TransitionRenderer::render(const Transition &transition) const
             SDL_DestroySurface(fromSurface);
         if (toSurface)
             SDL_DestroySurface(toSurface);
-
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
         return false;
     }
 
@@ -90,10 +74,6 @@ bool TransitionRenderer::render(const Transition &transition) const
             SDL_DestroyTexture(fromTexture);
         if (toTexture)
             SDL_DestroyTexture(toTexture);
-
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
         return false;
     }
 
@@ -138,9 +118,15 @@ bool TransitionRenderer::render(const Transition &transition) const
 
     SDL_DestroyTexture(fromTexture);
     SDL_DestroyTexture(toTexture);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 
     return true;
+}
+
+void TransitionRenderer::shutdown()
+{
+    if (renderer)
+    {
+        SDL_DestroyRenderer(renderer);
+        renderer = nullptr;
+    }
 }
