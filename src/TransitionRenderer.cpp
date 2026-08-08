@@ -189,32 +189,34 @@ std::string TransitionRenderer::preBlendFrame(
         return {};
     }
 
-    const auto *fromPixels =
-        static_cast<const uint32_t *>(from->pixels);
-    const auto *toPixels =
-        static_cast<const uint32_t *>(to->pixels);
-    auto *outPixels =
-        static_cast<uint32_t *>(output->pixels);
+    const auto *fromFormat = SDL_GetPixelFormatDetails(from->format);
+    const auto *toFormat = SDL_GetPixelFormatDetails(to->format);
+    SDL_Palette *fromPalette = SDL_GetSurfacePalette(from);
+    SDL_Palette *toPalette = SDL_GetSurfacePalette(to);
 
     for (int y = 0; y < output->h; ++y)
     {
         const auto *fromRow = reinterpret_cast<const uint32_t *>(
-            reinterpret_cast<const uint8_t *>(fromPixels) + y * from->pitch);
+            static_cast<const uint8_t *>(from->pixels) + y * from->pitch);
         const auto *toRow = reinterpret_cast<const uint32_t *>(
-            reinterpret_cast<const uint8_t *>(toPixels) + y * to->pitch);
+            static_cast<const uint8_t *>(to->pixels) + y * to->pitch);
         auto *outRow = reinterpret_cast<uint32_t *>(
-            reinterpret_cast<uint8_t *>(outPixels) + y * output->pitch);
+            static_cast<uint8_t *>(output->pixels) + y * output->pitch);
 
         for (int x = 0; x < output->w; ++x)
         {
             uint8_t fr, fg, fb, fa;
             uint8_t tr, tg, tb, ta;
 
-            SDL_GetRGBA(fromRow[x], from->format, &fr, &fg, &fb, &fa);
-            SDL_GetRGBA(toRow[x], to->format, &tr, &tg, &tb, &ta);
+            SDL_GetRGBA(
+                fromRow[x], fromFormat, fromPalette,
+                &fr, &fg, &fb, &fa);
+            SDL_GetRGBA(
+                toRow[x], toFormat, toPalette,
+                &tr, &tg, &tb, &ta);
 
-            outRow[x] = SDL_MapRGBA(
-                output->format,
+            outRow[x] = SDL_MapSurfaceRGBA(
+                output,
                 blendChannel(fr, tr, alpha),
                 blendChannel(fg, tg, alpha),
                 blendChannel(fb, tb, alpha),
