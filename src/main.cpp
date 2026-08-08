@@ -1,35 +1,26 @@
 #include "DynamicWallpaper.h"
+#include "IDesktopSurface.h"
 #include "TransitionRenderer.h"
 #include "WallpaperChanger.h"
 #include "WallpaperParser.h"
 #include "WallpaperScheduler.h"
+#include "X11DesktopSurface.h"
 
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <string>
+#include <thread>
 
-int main(int argc, char *argv[])
+namespace
 {
-    if (argc != 2)
-    {
-        std::cout << "Usage: ./ChronoWall <wallpaper.xml>\n";
-        return 1;
-    }
-
-    std::string xmlPath = argv[1];
-
-    WallpaperParser parser;
-
-    DynamicWallpaper wallpaper =
-        parser.parse(xmlPath);
-
-    auto now = std::chrono::system_clock::now();
-
-    std::time_t currentTime =
+int getElapsedSeconds(const DynamicWallpaper &wallpaper)
+{
+    const auto now = std::chrono::system_clock::now();
+    const std::time_t currentTime =
         std::chrono::system_clock::to_time_t(now);
 
-    std::tm *localTime =
-        std::localtime(&currentTime);
+    const std::tm *localTime = std::localtime(&currentTime);
 
     int elapsedSeconds =
         localTime->tm_hour * 3600 +
@@ -39,46 +30,130 @@ int main(int argc, char *argv[])
     elapsedSeconds -= wallpaper.getStartTime();
 
     if (elapsedSeconds < 0)
-    {
         elapsedSeconds += 24 * 60 * 60;
+
+    return elapsedSeconds;
+}
+
+const WallpaperFrame *findFrame(
+    const DynamicWallpaper &wallpaper,
+    const std::string &imagePath)
+{
+    for (const auto &frame : wallpaper.getFrames())
+    {
+        if (frame.getImagePath() == imagePath)
+            return &frame;
     }
 
-    WallpaperScheduler scheduler;
+    return nullptr;
+}
+}
 
-    const TimelineEvent *event =
-        scheduler.getCurrentEvent(
-            wallpaper,
-            elapsedSeconds);
-
-    if (event == nullptr)
+int main(int argc, char *argv[])
+{
+    if (argc != 2)
     {
-        std::cout << "No event found.\n";
+        std::cout << "Usage: ./ChronoWall <wallpaper.xml>\n";
         return 1;
     }
 
-    if (event->getType() == TimelineEventType::Static)
-    {
-        const WallpaperFrame &frame =
-            wallpaper.getFrames()[event->getFrameIndex()];
+    WallpaperParser parser;
+    DynamicWallpaper wallpaper = parser.parse(argv[1]);
 
-        WallpaperChanger changer;
-        changer.setWallpaper(frame);
+    WallpaperScheduler scheduler;
+    WallpaperChanger changer;
+
+    X11DesktopSurface surface;
+
+    if (!surface.init())
+    {
+        std::cerr << "Desktop surface initialization failed.\n";
+        return 1;
     }
-    else
+
+    TransitionRenderer renderer;
+
+    if (!renderer.init(surface))
     {
-        const Transition &transition =
-            wallpaper.getTransitions()[event->getTransitionIndex()];
+        std::cerr << "Transition renderer initialization failed.\n";
+        surface.shutdown();
+        return 1;
+    }
 
-        TransitionRenderer renderer;
+    std::cout << "ChronoWall daemon started.\n";
 
-        if (!renderer.render(transition))
+    bool running = true;
+
+    while (running)
+    {
+        const int elapsedSeconds = getElapsedSeconds(wallpaper);
+
+        const TimelineEvent *event =
+            scheduler.getCurrentEvent(
+                wallpaper,
+                elapsedSeconds);
+
+        if (!event)
         {
-            std::cerr << "Transition rendering failed.\n";
-            return 1;
+            std::cerr << "No event found.\n";
+            break;
+        }
+
+        if (event->getType() == TimelineEventType::Static)
+        {
+            const WallpaperFrame &frame =
+                wallpaper.getFrames()[event->getFrameIndex()];
+
+            changer.setWallpaper(frame);
+            surface.hide();
+
+            const double remaining =
+                static_cast<double>(event->getEndTime()) -
+                static_cast<double>(elapsedSeconds);
+
+            if (remaining > 0.0)
+            {
+                std::this_thread::sleep_for(
+                    std::chrono::duration<double>(remaining));
+            }
+        }
+        else
+        {
+            const Transition &transition =
+                wallpaper.getTransitions()[event->getTransitionIndex()];
+
+            surface.show();
+
+            if (!renderer.render(transition))
+            {
+                std::cerr << "Transition rendering failed.\n";
+                running = false;
+                continue;
+            }
+
+            // The SDL surface is still showing the final frame here.
+            // Hand the exact same image to the desktop first, then hide
+            // the surface so there is no visible gap at the handoff.
+            const WallpaperFrame *finalFrame =
+                findFrame(wallpaper, transition.getToImage());
+
+            if (!finalFrame)
+            {
+                std::cerr
+                    << "Could not find final transition frame: "
+                    << transition.getToImage() << '\n';
+                running = false;
+                continue;
+            }
+
+            changer.setWallpaper(*finalFrame);
+            surface.hide();
         }
     }
 
-    std::cout << "Wallpaper changed successfully!\n";
+    surface.hide();
+    renderer.shutdown();
+    surface.shutdown();
 
-    return 0;
+    return running ? 0 : 1;
 }
