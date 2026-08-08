@@ -7,7 +7,6 @@
 #include <csignal>
 #include <cerrno>
 #include <iostream>
-#include <thread>
 #include <time.h>
 
 namespace
@@ -95,41 +94,41 @@ int main(int argc, char *argv[])
                 wallpaper.getFrames()[event->getFrameIndex()];
 
             changer.setWallpaper(frame);
-
-            const double remaining =
-                static_cast<double>(event->getEndTime()) -
-                static_cast<double>(elapsedSeconds);
-
-            sleepUntilOrShutdown(remaining);
-            continue;
         }
-
-        // Transitions are intentionally simple for now: immediately switch
-        // to the destination wallpaper, then wait for the transition's
-        // duration. This keeps the daemon lightweight and avoids creating
-        // any extra windows or continuous rendering work.
-        const Transition &transition =
-            wallpaper.getTransitions()[event->getTransitionIndex()];
-
-        const WallpaperFrame *destination = nullptr;
-        for (const auto &frame : wallpaper.getFrames())
+        else
         {
-            if (frame.getImagePath() == transition.getToImage())
+            // Keep transitions lightweight for now: immediately select the
+            // destination image through the normal desktop wallpaper API.
+            // The scheduler still honours the transition duration; there is
+            // no rendering window, GPU loop, or extra desktop surface.
+            const Transition &transition =
+                wallpaper.getTransitions()[event->getTransitionIndex()];
+
+            const WallpaperFrame *destination = nullptr;
+            for (const auto &frame : wallpaper.getFrames())
             {
-                destination = &frame;
+                if (frame.getImagePath() == transition.getToImage())
+                {
+                    destination = &frame;
+                    break;
+                }
+            }
+
+            if (!destination)
+            {
+                std::cerr << "Could not find transition destination: "
+                          << transition.getToImage() << '\n';
                 break;
             }
+
+            changer.setWallpaper(*destination);
         }
 
-        if (!destination)
-        {
-            std::cerr << "Could not find transition destination: "
-                      << transition.getToImage() << '\n';
-            break;
-        }
+        const double remaining =
+            static_cast<double>(event->getEndTime()) -
+            static_cast<double>(elapsedSeconds);
 
-        changer.setWallpaper(*destination);
-        sleepUntilOrShutdown(transition.getDuration());
+        sleepUntilOrShutdown(remaining);
     }
 
     std::cout << "ChronoWall stopped.\n";
