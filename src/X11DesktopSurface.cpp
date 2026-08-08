@@ -1,11 +1,14 @@
 #include "X11DesktopSurface.h"
 
 #include <SDL3/SDL.h>
+#include <X11/Xlib.h>
 
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <thread>
 
 namespace
 {
@@ -39,6 +42,59 @@ void setNemoDesktopIcons(bool enabled)
         std::cerr << "Warning: could not set Nemo desktop icons to "
                   << value << "\n";
     }
+}
+
+bool nemoDesktopExists(Display *display)
+{
+    if (!display)
+        return false;
+
+    Window root = DefaultRootWindow(display);
+    Window rootReturn = 0;
+    Window parentReturn = 0;
+    Window *children = nullptr;
+    unsigned int childCount = 0;
+
+    if (!XQueryTree(
+            display,
+            root,
+            &rootReturn,
+            &parentReturn,
+            &children,
+            &childCount))
+    {
+        return false;
+    }
+
+    bool found = false;
+
+    for (unsigned int i = 0; i < childCount; ++i)
+    {
+        XClassHint classHint{};
+
+        if (XGetClassHint(display, children[i], &classHint))
+        {
+            const bool isNemo =
+                (classHint.res_name && std::string(classHint.res_name) == "nemo-desktop") ||
+                (classHint.res_class && std::string(classHint.res_class) == "Nemo-desktop");
+
+            if (classHint.res_name)
+                XFree(classHint.res_name);
+            if (classHint.res_class)
+                XFree(classHint.res_class);
+
+            if (isNemo)
+            {
+                found = true;
+                break;
+            }
+        }
+    }
+
+    if (children)
+        XFree(children);
+
+    return found;
 }
 }
 
@@ -95,9 +151,34 @@ void X11DesktopSurface::show()
     if (!window)
         return;
 
-    // Nemo paints icons and wallpaper as one surface. Cede that role before
-    // mapping ChronoWall so the renderer does not cover desktop icons.
+    // Nemo paints icons and wallpaper as one opaque surface. Cede that role
+    // and wait for its X11 window to disappear before mapping ChronoWall.
     setNemoDesktopIcons(false);
+
+    SDL_PropertiesID properties = SDL_GetWindowProperties(window);
+    Display *display = properties
+        ? static_cast<Display *>(SDL_GetPointerProperty(
+              properties,
+              SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
+              nullptr))
+        : nullptr;
+
+    if (display)
+    {
+        constexpr int maxAttempts = 40;
+        constexpr auto interval = std::chrono::milliseconds(25);
+
+        for (int attempt = 0; attempt < maxAttempts; ++attempt)
+        {
+            XSync(display, False);
+
+            if (!nemoDesktopExists(display))
+                break;
+
+            std::this_thread::sleep_for(interval);
+        }
+    }
+
     SDL_ShowWindow(window);
 }
 
@@ -108,9 +189,36 @@ void X11DesktopSurface::hide()
 
     SDL_HideWindow(window);
 
-    // Restore the exact desktop-icon state that existed before ChronoWall
-    // started, rather than forcing the user's preference to true.
+    // Give X11 a chance to process the unmap before Nemo recreates its desktop.
+    SDL_PropertiesID properties = SDL_GetWindowProperties(window);
+    Display *display = properties
+        ? static_cast<Display *>(SDL_GetPointerProperty(
+              properties,
+              SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
+              nullptr))
+        : nullptr;
+
+    if (display)
+        XSync(display, False);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     setNemoDesktopIcons(originalDesktopIconsEnabled);
+
+    if (display && originalDesktopIconsEnabled)
+    {
+        constexpr int maxAttempts = 40;
+        constexpr auto interval = std::chrono::milliseconds(25);
+
+        for (int attempt = 0; attempt < maxAttempts; ++attempt)
+        {
+            XSync(display, False);
+
+            if (nemoDesktopExists(display))
+                break;
+
+            std::this_thread::sleep_for(interval);
+        }
+    }
 }
 
 SDL_Window *X11DesktopSurface::getWindow()
