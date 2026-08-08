@@ -4,7 +4,32 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstdint>
+#include <cstdio>
 #include <iostream>
+#include <string>
+
+namespace
+{
+constexpr const char *TEMP_FRAME = "/tmp/chronowall-transition.bmp";
+
+SDL_Surface *loadRGBA(const std::string &path)
+{
+    SDL_Surface *surface = SDL_LoadSurface(path.c_str());
+    if (!surface)
+        return nullptr;
+
+    SDL_Surface *rgba = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
+    SDL_DestroySurface(surface);
+    return rgba;
+}
+
+uint8_t blendChannel(uint8_t from, uint8_t to, double alpha)
+{
+    return static_cast<uint8_t>(
+        from + (static_cast<double>(to) - from) * alpha + 0.5);
+}
+}
 
 bool TransitionRenderer::init(IDesktopSurface &surface)
 {
@@ -122,6 +147,97 @@ bool TransitionRenderer::render(const Transition &transition)
     return true;
 }
 
+std::string TransitionRenderer::preBlendFrame(
+    const Transition &transition,
+    double alpha)
+{
+    alpha = std::clamp(alpha, 0.0, 1.0);
+
+    SDL_Surface *from = loadRGBA(transition.getFromImage());
+    SDL_Surface *to = loadRGBA(transition.getToImage());
+
+    if (!from || !to)
+    {
+        std::cerr << "Offline transition image loading failed: "
+                  << SDL_GetError() << '\n';
+        if (from)
+            SDL_DestroySurface(from);
+        if (to)
+            SDL_DestroySurface(to);
+        return {};
+    }
+
+    if (from->w != to->w || from->h != to->h)
+    {
+        std::cerr << "Offline transition images have different dimensions.\n";
+        SDL_DestroySurface(from);
+        SDL_DestroySurface(to);
+        return {};
+    }
+
+    SDL_Surface *output = SDL_CreateSurface(
+        from->w,
+        from->h,
+        SDL_PIXELFORMAT_RGBA32);
+
+    if (!output)
+    {
+        std::cerr << "Offline transition output creation failed: "
+                  << SDL_GetError() << '\n';
+        SDL_DestroySurface(from);
+        SDL_DestroySurface(to);
+        return {};
+    }
+
+    const auto *fromPixels =
+        static_cast<const uint32_t *>(from->pixels);
+    const auto *toPixels =
+        static_cast<const uint32_t *>(to->pixels);
+    auto *outPixels =
+        static_cast<uint32_t *>(output->pixels);
+
+    for (int y = 0; y < output->h; ++y)
+    {
+        const auto *fromRow = reinterpret_cast<const uint32_t *>(
+            reinterpret_cast<const uint8_t *>(fromPixels) + y * from->pitch);
+        const auto *toRow = reinterpret_cast<const uint32_t *>(
+            reinterpret_cast<const uint8_t *>(toPixels) + y * to->pitch);
+        auto *outRow = reinterpret_cast<uint32_t *>(
+            reinterpret_cast<uint8_t *>(outPixels) + y * output->pitch);
+
+        for (int x = 0; x < output->w; ++x)
+        {
+            uint8_t fr, fg, fb, fa;
+            uint8_t tr, tg, tb, ta;
+
+            SDL_GetRGBA(fromRow[x], from->format, &fr, &fg, &fb, &fa);
+            SDL_GetRGBA(toRow[x], to->format, &tr, &tg, &tb, &ta);
+
+            outRow[x] = SDL_MapRGBA(
+                output->format,
+                blendChannel(fr, tr, alpha),
+                blendChannel(fg, tg, alpha),
+                blendChannel(fb, tb, alpha),
+                blendChannel(fa, ta, alpha));
+        }
+    }
+
+    const bool saved = SDL_SaveBMP(output, TEMP_FRAME);
+
+    SDL_DestroySurface(output);
+    SDL_DestroySurface(from);
+    SDL_DestroySurface(to);
+
+    if (!saved)
+    {
+        std::cerr << "Offline transition frame save failed: "
+                  << SDL_GetError() << '\n';
+        return {};
+    }
+
+    return TEMP_FRAME;
+}
+
 void TransitionRenderer::shutdown()
 {
     if (renderer)
@@ -129,4 +245,6 @@ void TransitionRenderer::shutdown()
         SDL_DestroyRenderer(renderer);
         renderer = nullptr;
     }
+
+    std::remove(TEMP_FRAME);
 }
