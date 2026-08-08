@@ -13,7 +13,6 @@
 #include <cerrno>
 #include <iostream>
 #include <string>
-#include <thread>
 #include <time.h>
 
 namespace
@@ -78,9 +77,6 @@ void sleepUntilOrShutdown(double seconds)
     }
 }
 
-// Slow transitions do not need a 60+ FPS window. The interval scales with
-// the duration so short-but-not-live transitions still look smooth while
-// very long dawn/dusk gradients update only every few seconds.
 double getPreBlendInterval(double duration)
 {
     if (duration <= 60.0)
@@ -170,9 +166,10 @@ int main(int argc, char *argv[])
             // Mode A: short transition, full GPU animation.
             surface.show();
 
-            if (!renderer.render(transition))
+            if (!renderer.render(transition, &shutdownRequested))
             {
-                std::cerr << "Live transition rendering failed.\n";
+                if (!shutdownRequested)
+                    std::cerr << "Live transition rendering failed.\n";
                 running = false;
                 continue;
             }
