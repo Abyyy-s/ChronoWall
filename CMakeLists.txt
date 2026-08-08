@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(tinyxml2 REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SDL3 REQUIRED sdl3)
 
 add_executable(ChronoWall
     src/main.cpp
@@ -16,8 +18,17 @@ add_executable(ChronoWall
     src/DynamicWallpaper.cpp
     src/Transition.cpp
     src/TimelineEvent.cpp
+    src/TransitionRenderer.cpp
 )
 
-target_include_directories(ChronoWall PRIVATE include)
+target_include_directories(ChronoWall PRIVATE
+    include
+    ${SDL3_INCLUDE_DIRS}
+)
 
-target_link_libraries(ChronoWall PRIVATE tinyxml2::tinyxml2)
+target_link_directories(ChronoWall PRIVATE ${SDL3_LIBRARY_DIRS})
+
+target_link_libraries(ChronoWall PRIVATE
+    tinyxml2::tinyxml2
+    ${SDL3_LIBRARIES}
+)
