@@ -8,6 +8,10 @@
 
 bool TransitionRenderer::render(const Transition &transition) const
 {
+    // Linux/X11: make the renderer window a desktop-layer window.
+    // SDL ignores this hint on platforms where it is not applicable.
+    SDL_SetHint(SDL_HINT_X11_WINDOW_TYPE, "_NET_WM_WINDOW_TYPE_DESKTOP");
+
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
         std::cerr << "SDL initialization failed: "
@@ -19,7 +23,7 @@ bool TransitionRenderer::render(const Transition &transition) const
         "ChronoWall Transition",
         1280,
         720,
-        0);
+        SDL_WINDOW_BORDERLESS);
 
     if (!window)
     {
