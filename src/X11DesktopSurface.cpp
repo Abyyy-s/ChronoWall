@@ -2,12 +2,32 @@
 
 #include <SDL3/SDL.h>
 
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 
 namespace
 {
+bool getNemoDesktopIconsEnabled()
+{
+    FILE *pipe = popen(
+        "gsettings get org.nemo.desktop show-desktop-icons",
+        "r");
+
+    if (!pipe)
+        return true;
+
+    char buffer[32]{};
+    const bool read = std::fgets(buffer, sizeof(buffer), pipe) != nullptr;
+    pclose(pipe);
+
+    if (!read)
+        return true;
+
+    return std::string(buffer).find("true") != std::string::npos;
+}
+
 void setNemoDesktopIcons(bool enabled)
 {
     const char *value = enabled ? "true" : "false";
@@ -27,6 +47,8 @@ bool X11DesktopSurface::init()
     // Nemo owns the normal desktop surface. ChronoWall only takes it over
     // briefly for short live transitions, so do not create another DESKTOP
     // window or use override-redirect here.
+    originalDesktopIconsEnabled = getNemoDesktopIconsEnabled();
+
     SDL_SetHint(SDL_HINT_WINDOW_ACTIVATE_WHEN_SHOWN, "0");
 
     if (!SDL_Init(SDL_INIT_VIDEO))
@@ -86,9 +108,9 @@ void X11DesktopSurface::hide()
 
     SDL_HideWindow(window);
 
-    // Restore Nemo only after ChronoWall is hidden. The final frame is first
-    // handed to gsettings by the daemon, so the desktop returns without a gap.
-    setNemoDesktopIcons(true);
+    // Restore the exact desktop-icon state that existed before ChronoWall
+    // started, rather than forcing the user's preference to true.
+    setNemoDesktopIcons(originalDesktopIconsEnabled);
 }
 
 SDL_Window *X11DesktopSurface::getWindow()
@@ -104,7 +126,6 @@ void X11DesktopSurface::shutdown()
         window = nullptr;
     }
 
-    // Always leave the user's desktop under Nemo's control.
-    setNemoDesktopIcons(true);
+    setNemoDesktopIcons(originalDesktopIconsEnabled);
     SDL_Quit();
 }
