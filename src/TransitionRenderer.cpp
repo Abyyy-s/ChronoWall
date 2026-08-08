@@ -11,8 +11,6 @@
 
 namespace
 {
-constexpr const char *TEMP_FRAME = "/tmp/chronowall-transition.bmp";
-
 SDL_Surface *loadRGBA(const std::string &path)
 {
     SDL_Surface *surface = SDL_LoadSurface(path.c_str());
@@ -232,7 +230,11 @@ std::string TransitionRenderer::preBlendFrame(
         }
     }
 
-    const bool saved = SDL_SaveBMP(output, TEMP_FRAME);
+    const std::string framePath =
+        "/tmp/chronowall-transition-" +
+        std::to_string(++tempFrameCounter) + ".bmp";
+
+    const bool saved = SDL_SaveBMP(output, framePath.c_str());
 
     SDL_DestroySurface(output);
     SDL_DestroySurface(from);
@@ -245,7 +247,11 @@ std::string TransitionRenderer::preBlendFrame(
         return {};
     }
 
-    return TEMP_FRAME;
+    if (!lastTempFrame.empty())
+        std::remove(lastTempFrame.c_str());
+
+    lastTempFrame = framePath;
+    return framePath;
 }
 
 void TransitionRenderer::shutdown()
@@ -256,5 +262,9 @@ void TransitionRenderer::shutdown()
         renderer = nullptr;
     }
 
-    std::remove(TEMP_FRAME);
+    if (!lastTempFrame.empty())
+    {
+        std::remove(lastTempFrame.c_str());
+        lastTempFrame.clear();
+    }
 }
