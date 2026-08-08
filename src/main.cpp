@@ -6,6 +6,7 @@
 #include "WallpaperScheduler.h"
 #include "X11DesktopSurface.h"
 
+#include <algorithm>
 #include <chrono>
 #include <csignal>
 #include <ctime>
@@ -18,6 +19,8 @@
 namespace
 {
 volatile std::sig_atomic_t shutdownRequested = 0;
+
+constexpr double LIVE_TRANSITION_THRESHOLD = 20.0;
 
 void handleShutdownSignal(int)
 {
@@ -65,13 +68,28 @@ void sleepUntilOrShutdown(double seconds)
 
     timespec remaining{};
     remaining.tv_sec = static_cast<time_t>(seconds);
-    remaining.tv_nsec = static_cast<long>((seconds - remaining.tv_sec) * 1'000'000'000.0);
+    remaining.tv_nsec = static_cast<long>(
+        (seconds - remaining.tv_sec) * 1'000'000'000.0);
 
     while (!shutdownRequested && nanosleep(&remaining, &remaining) == -1)
     {
         if (errno != EINTR)
             break;
     }
+}
+
+// Slow transitions do not need a 60+ FPS window. The interval scales with
+// the duration so short-but-not-live transitions still look smooth while
+// very long dawn/dusk gradients update only every few seconds.
+double getPreBlendInterval(double duration)
+{
+    if (duration <= 60.0)
+        return 2.0;
+
+    if (duration <= 300.0)
+        return 5.0;
+
+    return 15.0;
 }
 }
 
@@ -118,9 +136,7 @@ int main(int argc, char *argv[])
         const int elapsedSeconds = getElapsedSeconds(wallpaper);
 
         const TimelineEvent *event =
-            scheduler.getCurrentEvent(
-                wallpaper,
-                elapsedSeconds);
+            scheduler.getCurrentEvent(wallpaper, elapsedSeconds);
 
         if (!event)
         {
@@ -141,17 +157,22 @@ int main(int argc, char *argv[])
                 static_cast<double>(elapsedSeconds);
 
             sleepUntilOrShutdown(remaining);
+            continue;
         }
-        else
-        {
-            const Transition &transition =
-                wallpaper.getTransitions()[event->getTransitionIndex()];
 
+        const Transition &transition =
+            wallpaper.getTransitions()[event->getTransitionIndex()];
+
+        const double duration = std::max(0.001, transition.getDuration());
+
+        if (duration < LIVE_TRANSITION_THRESHOLD)
+        {
+            // Mode A: short transition, full GPU animation.
             surface.show();
 
             if (!renderer.render(transition))
             {
-                std::cerr << "Transition rendering failed.\n";
+                std::cerr << "Live transition rendering failed.\n";
                 running = false;
                 continue;
             }
@@ -159,9 +180,6 @@ int main(int argc, char *argv[])
             if (shutdownRequested)
                 break;
 
-            // The SDL surface is still showing the final frame here.
-            // Hand the exact same image to the desktop first, then hide
-            // the surface so there is no visible gap at the handoff.
             const WallpaperFrame *finalFrame =
                 findFrame(wallpaper, transition.getToImage());
 
@@ -174,8 +192,45 @@ int main(int argc, char *argv[])
                 continue;
             }
 
+            // The SDL surface is still showing the final frame. Hand the
+            // same image to the desktop before hiding the surface.
             changer.setWallpaper(*finalFrame);
             surface.hide();
+        }
+        else
+        {
+            // Mode B: long transition. Generate one blended frame at a time
+            // and hand it to the normal desktop wallpaper API. No live SDL
+            // surface is shown, so Nemo/icons remain untouched.
+            const double interval = getPreBlendInterval(duration);
+            const auto start = std::chrono::steady_clock::now();
+
+            while (!shutdownRequested)
+            {
+                const auto now = std::chrono::steady_clock::now();
+                const double elapsed =
+                    std::chrono::duration<double>(now - start).count();
+                const double progress =
+                    std::clamp(elapsed / duration, 0.0, 1.0);
+
+                const std::string framePath =
+                    renderer.preBlendFrame(transition, progress);
+
+                if (framePath.empty())
+                {
+                    std::cerr << "Offline transition rendering failed.\n";
+                    running = false;
+                    break;
+                }
+
+                changer.setWallpaper(WallpaperFrame(framePath, 0));
+
+                if (progress >= 1.0)
+                    break;
+
+                const double remaining = duration - elapsed;
+                sleepUntilOrShutdown(std::min(interval, remaining));
+            }
         }
     }
 
