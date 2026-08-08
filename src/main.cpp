@@ -1,4 +1,5 @@
 #include "DynamicWallpaper.h"
+#include "TransitionRenderer.h"
 #include "WallpaperChanger.h"
 #include "WallpaperParser.h"
 #include "WallpaperScheduler.h"
@@ -22,7 +23,6 @@ int main(int argc, char *argv[])
     DynamicWallpaper wallpaper =
         parser.parse(xmlPath);
 
-
     auto now = std::chrono::system_clock::now();
 
     std::time_t currentTime =
@@ -36,11 +36,8 @@ int main(int argc, char *argv[])
         localTime->tm_min * 60 +
         localTime->tm_sec;
 
-    // Account for the wallpaper's start time
     elapsedSeconds -= wallpaper.getStartTime();
 
-    // If the current time is before the start time,
-    // wrap around to the previous day.
     if (elapsedSeconds < 0)
     {
         elapsedSeconds += 24 * 60 * 60;
@@ -64,9 +61,7 @@ int main(int argc, char *argv[])
         const WallpaperFrame &frame =
             wallpaper.getFrames()[event->getFrameIndex()];
 
-
         WallpaperChanger changer;
-
         changer.setWallpaper(frame);
     }
     else
@@ -74,6 +69,13 @@ int main(int argc, char *argv[])
         const Transition &transition =
             wallpaper.getTransitions()[event->getTransitionIndex()];
 
+        TransitionRenderer renderer;
+
+        if (!renderer.render(transition))
+        {
+            std::cerr << "Transition rendering failed.\n";
+            return 1;
+        }
     }
 
     std::cout << "Wallpaper changed successfully!\n";
