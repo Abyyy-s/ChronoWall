@@ -14,6 +14,7 @@ public:
 
 private:
     SDL_Window *window = nullptr;
+    bool originalDesktopIconsEnabled = true;
 };
 
 #endif
