@@ -1,14 +1,44 @@
 #include "X11DesktopSurface.h"
 
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_syswm.h>
 
 #include <X11/Xlib.h>
 #include <iostream>
 
+namespace
+{
+void lowerWindow(SDL_Window *window)
+{
+    if (!window)
+        return;
+
+    SDL_PropertiesID properties = SDL_GetWindowProperties(window);
+
+    auto *display = static_cast<Display *>(SDL_GetPointerProperty(
+        properties,
+        SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
+        nullptr));
+
+    const ::Window xWindow = static_cast<::Window>(SDL_GetNumberProperty(
+        properties,
+        SDL_PROP_WINDOW_X11_WINDOW_NUMBER,
+        0));
+
+    if (!display || xWindow == 0)
+        return;
+
+    XLowerWindow(display, xWindow);
+    XFlush(display);
+}
+}
+
 bool X11DesktopSurface::init()
 {
+    // Ask SDL to create this as an X11 desktop window and bypass WM
+    // management. We still explicitly lower it after creation/showing.
     SDL_SetHint(SDL_HINT_X11_WINDOW_TYPE, "_NET_WM_WINDOW_TYPE_DESKTOP");
+    SDL_SetHint(SDL_HINT_X11_FORCE_OVERRIDE_REDIRECT, "1");
+    SDL_SetHint(SDL_HINT_WINDOW_ACTIVATE_WHEN_SHOWN, "0");
 
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
@@ -32,7 +62,9 @@ bool X11DesktopSurface::init()
         "ChronoWall",
         bounds.w,
         bounds.h,
-        SDL_WINDOW_BORDERLESS | SDL_WINDOW_NOT_FOCUSABLE);
+        SDL_WINDOW_BORDERLESS |
+        SDL_WINDOW_NOT_FOCUSABLE |
+        SDL_WINDOW_HIDDEN);
 
     if (!window)
     {
@@ -43,38 +75,8 @@ bool X11DesktopSurface::init()
     }
 
     SDL_SetWindowPosition(window, bounds.x, bounds.y);
+    lowerWindow(window);
 
-    SDL_SysWMinfo wmInfo{};
-    wmInfo.version.major = SDL_MAJOR_VERSION;
-    wmInfo.version.minor = SDL_MINOR_VERSION;
-    wmInfo.version.patch = SDL_MICRO_VERSION;
-
-    if (!SDL_GetWindowWMInfo(window, &wmInfo))
-    {
-        std::cerr << "Could not get X11 window information: "
-                  << SDL_GetError() << '\n';
-        SDL_DestroyWindow(window);
-        window = nullptr;
-        SDL_Quit();
-        return false;
-    }
-
-    if (wmInfo.subsystem != SDL_SYSWM_X11)
-    {
-        std::cerr << "ChronoWall requires an X11 SDL video subsystem.\n";
-        SDL_DestroyWindow(window);
-        window = nullptr;
-        SDL_Quit();
-        return false;
-    }
-
-    Display *display = wmInfo.info.x11.display;
-    ::Window xWindow = wmInfo.info.x11.window;
-
-    XLowerWindow(display, xWindow);
-    XFlush(display);
-
-    SDL_HideWindow(window);
     return true;
 }
 
@@ -84,18 +86,7 @@ void X11DesktopSurface::show()
         return;
 
     SDL_ShowWindow(window);
-
-    SDL_SysWMinfo wmInfo{};
-    wmInfo.version.major = SDL_MAJOR_VERSION;
-    wmInfo.version.minor = SDL_MINOR_VERSION;
-    wmInfo.version.patch = SDL_MICRO_VERSION;
-
-    if (SDL_GetWindowWMInfo(window, &wmInfo) &&
-        wmInfo.subsystem == SDL_SYSWM_X11)
-    {
-        XLowerWindow(wmInfo.info.x11.display, wmInfo.info.x11.window);
-        XFlush(wmInfo.info.x11.display);
-    }
+    lowerWindow(window);
 }
 
 void X11DesktopSurface::hide()
