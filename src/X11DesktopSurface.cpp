@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 #include <chrono>
 #include <cstdio>
@@ -96,16 +97,47 @@ bool nemoDesktopExists(Display *display)
 
     return found;
 }
+
+bool getX11Handles(SDL_Window *window, Display **displayOut, Window *windowOut)
+{
+    if (!window || !displayOut || !windowOut)
+        return false;
+
+    SDL_PropertiesID properties = SDL_GetWindowProperties(window);
+    if (!properties)
+        return false;
+
+    Display *display = static_cast<Display *>(SDL_GetPointerProperty(
+        properties,
+        SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
+        nullptr));
+
+    const Window xwindow = static_cast<Window>(SDL_GetNumberProperty(
+        properties,
+        SDL_PROP_WINDOW_X11_WINDOW_NUMBER,
+        0));
+
+    if (!display || !xwindow)
+        return false;
+
+    *displayOut = display;
+    *windowOut = xwindow;
+    return true;
+}
 }
 
 bool X11DesktopSurface::init()
 {
     // Nemo owns the normal desktop surface. ChronoWall only takes it over
-    // briefly for short live transitions, so do not create another DESKTOP
-    // window or use override-redirect here.
+    // briefly for short live transitions.
     originalDesktopIconsEnabled = getNemoDesktopIconsEnabled();
 
     SDL_SetHint(SDL_HINT_WINDOW_ACTIVATE_WHEN_SHOWN, "0");
+
+    // Do not let Cinnamon manage this window as a normal application window.
+    // This prevents the title/taskbar/stacking behaviour that makes the
+    // transition surface appear as an extra window.
+    SDL_SetHint(SDL_HINT_X11_FORCE_OVERRIDE_REDIRECT, "1");
 
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
@@ -155,15 +187,10 @@ void X11DesktopSurface::show()
     // and wait for its X11 window to disappear before mapping ChronoWall.
     setNemoDesktopIcons(false);
 
-    SDL_PropertiesID properties = SDL_GetWindowProperties(window);
-    Display *display = properties
-        ? static_cast<Display *>(SDL_GetPointerProperty(
-              properties,
-              SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
-              nullptr))
-        : nullptr;
+    Display *display = nullptr;
+    Window xwindow = 0;
 
-    if (display)
+    if (getX11Handles(window, &display, &xwindow))
     {
         constexpr int maxAttempts = 40;
         constexpr auto interval = std::chrono::milliseconds(25);
@@ -180,6 +207,15 @@ void X11DesktopSurface::show()
     }
 
     SDL_ShowWindow(window);
+
+    // The surface is override-redirect, so the window manager does not place
+    // it for us. Lower it beneath normal application windows, leaving it as
+    // the visible desktop layer while Nemo is temporarily disabled.
+    if (display && xwindow)
+    {
+        XLowerWindow(display, xwindow);
+        XSync(display, False);
+    }
 }
 
 void X11DesktopSurface::hide()
@@ -189,15 +225,11 @@ void X11DesktopSurface::hide()
 
     SDL_HideWindow(window);
 
-    // Give X11 a chance to process the unmap before Nemo recreates its desktop.
-    SDL_PropertiesID properties = SDL_GetWindowProperties(window);
-    Display *display = properties
-        ? static_cast<Display *>(SDL_GetPointerProperty(
-              properties,
-              SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
-              nullptr))
-        : nullptr;
+    Display *display = nullptr;
+    Window xwindow = 0;
+    getX11Handles(window, &display, &xwindow);
 
+    // Give X11 a chance to process the unmap before Nemo recreates its desktop.
     if (display)
         XSync(display, False);
 
