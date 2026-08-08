@@ -7,13 +7,23 @@
 #include "X11DesktopSurface.h"
 
 #include <chrono>
+#include <csignal>
 #include <ctime>
+#include <cerrno>
 #include <iostream>
 #include <string>
 #include <thread>
+#include <time.h>
 
 namespace
 {
+volatile std::sig_atomic_t shutdownRequested = 0;
+
+void handleShutdownSignal(int)
+{
+    shutdownRequested = 1;
+}
+
 int getElapsedSeconds(const DynamicWallpaper &wallpaper)
 {
     const auto now = std::chrono::system_clock::now();
@@ -47,6 +57,22 @@ const WallpaperFrame *findFrame(
 
     return nullptr;
 }
+
+void sleepUntilOrShutdown(double seconds)
+{
+    if (seconds <= 0.0)
+        return;
+
+    timespec remaining{};
+    remaining.tv_sec = static_cast<time_t>(seconds);
+    remaining.tv_nsec = static_cast<long>((seconds - remaining.tv_sec) * 1'000'000'000.0);
+
+    while (!shutdownRequested && nanosleep(&remaining, &remaining) == -1)
+    {
+        if (errno != EINTR)
+            break;
+    }
+}
 }
 
 int main(int argc, char *argv[])
@@ -56,6 +82,9 @@ int main(int argc, char *argv[])
         std::cout << "Usage: ./ChronoWall <wallpaper.xml>\n";
         return 1;
     }
+
+    std::signal(SIGINT, handleShutdownSignal);
+    std::signal(SIGTERM, handleShutdownSignal);
 
     WallpaperParser parser;
     DynamicWallpaper wallpaper = parser.parse(argv[1]);
@@ -84,7 +113,7 @@ int main(int argc, char *argv[])
 
     bool running = true;
 
-    while (running)
+    while (running && !shutdownRequested)
     {
         const int elapsedSeconds = getElapsedSeconds(wallpaper);
 
@@ -111,11 +140,7 @@ int main(int argc, char *argv[])
                 static_cast<double>(event->getEndTime()) -
                 static_cast<double>(elapsedSeconds);
 
-            if (remaining > 0.0)
-            {
-                std::this_thread::sleep_for(
-                    std::chrono::duration<double>(remaining));
-            }
+            sleepUntilOrShutdown(remaining);
         }
         else
         {
@@ -130,6 +155,9 @@ int main(int argc, char *argv[])
                 running = false;
                 continue;
             }
+
+            if (shutdownRequested)
+                break;
 
             // The SDL surface is still showing the final frame here.
             // Hand the exact same image to the desktop first, then hide
@@ -154,6 +182,9 @@ int main(int argc, char *argv[])
     surface.hide();
     renderer.shutdown();
     surface.shutdown();
+
+    if (shutdownRequested)
+        std::cout << "ChronoWall stopped cleanly.\n";
 
     return running ? 0 : 1;
 }
