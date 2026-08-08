@@ -57,7 +57,9 @@ bool TransitionRenderer::init(IDesktopSurface &surface)
     return true;
 }
 
-bool TransitionRenderer::render(const Transition &transition)
+bool TransitionRenderer::render(
+    const Transition &transition,
+    const volatile std::sig_atomic_t *shutdownFlag)
 {
     if (!renderer)
     {
@@ -113,12 +115,18 @@ bool TransitionRenderer::render(const Transition &transition)
 
     while (running)
     {
+        if (shutdownFlag && *shutdownFlag)
+            running = false;
+
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_EVENT_QUIT)
                 running = false;
         }
+
+        if (!running)
+            break;
 
         const auto now = std::chrono::steady_clock::now();
         const double elapsed =
@@ -144,7 +152,7 @@ bool TransitionRenderer::render(const Transition &transition)
     SDL_DestroyTexture(fromTexture);
     SDL_DestroyTexture(toTexture);
 
-    return true;
+    return shutdownFlag == nullptr || !*shutdownFlag;
 }
 
 std::string TransitionRenderer::preBlendFrame(
