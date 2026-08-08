@@ -1,25 +1,18 @@
 #include "DynamicWallpaper.h"
-#include "IDesktopSurface.h"
-#include "TransitionRenderer.h"
 #include "WallpaperChanger.h"
 #include "WallpaperParser.h"
 #include "WallpaperScheduler.h"
-#include "X11DesktopSurface.h"
 
-#include <algorithm>
 #include <chrono>
 #include <csignal>
-#include <ctime>
 #include <cerrno>
 #include <iostream>
-#include <string>
+#include <thread>
 #include <time.h>
 
 namespace
 {
 volatile std::sig_atomic_t shutdownRequested = 0;
-
-constexpr double LIVE_TRANSITION_THRESHOLD = 20.0;
 
 void handleShutdownSignal(int)
 {
@@ -47,19 +40,6 @@ int getElapsedSeconds(const DynamicWallpaper &wallpaper)
     return elapsedSeconds;
 }
 
-const WallpaperFrame *findFrame(
-    const DynamicWallpaper &wallpaper,
-    const std::string &imagePath)
-{
-    for (const auto &frame : wallpaper.getFrames())
-    {
-        if (frame.getImagePath() == imagePath)
-            return &frame;
-    }
-
-    return nullptr;
-}
-
 void sleepUntilOrShutdown(double seconds)
 {
     if (seconds <= 0.0)
@@ -75,17 +55,6 @@ void sleepUntilOrShutdown(double seconds)
         if (errno != EINTR)
             break;
     }
-}
-
-double getPreBlendInterval(double duration)
-{
-    if (duration <= 60.0)
-        return 2.0;
-
-    if (duration <= 300.0)
-        return 5.0;
-
-    return 15.0;
 }
 }
 
@@ -106,31 +75,11 @@ int main(int argc, char *argv[])
     WallpaperScheduler scheduler;
     WallpaperChanger changer;
 
-    X11DesktopSurface surface;
-
-    if (!surface.init())
-    {
-        std::cerr << "Desktop surface initialization failed.\n";
-        return 1;
-    }
-
-    TransitionRenderer renderer;
-
-    if (!renderer.init(surface))
-    {
-        std::cerr << "Transition renderer initialization failed.\n";
-        surface.shutdown();
-        return 1;
-    }
-
     std::cout << "ChronoWall daemon started.\n";
 
-    bool running = true;
-
-    while (running && !shutdownRequested)
+    while (!shutdownRequested)
     {
         const int elapsedSeconds = getElapsedSeconds(wallpaper);
-
         const TimelineEvent *event =
             scheduler.getCurrentEvent(wallpaper, elapsedSeconds);
 
@@ -146,7 +95,6 @@ int main(int argc, char *argv[])
                 wallpaper.getFrames()[event->getFrameIndex()];
 
             changer.setWallpaper(frame);
-            surface.hide();
 
             const double remaining =
                 static_cast<double>(event->getEndTime()) -
@@ -156,87 +104,34 @@ int main(int argc, char *argv[])
             continue;
         }
 
+        // Transitions are intentionally simple for now: immediately switch
+        // to the destination wallpaper, then wait for the transition's
+        // duration. This keeps the daemon lightweight and avoids creating
+        // any extra windows or continuous rendering work.
         const Transition &transition =
             wallpaper.getTransitions()[event->getTransitionIndex()];
 
-        const double duration = std::max(0.001, transition.getDuration());
-
-        if (duration < LIVE_TRANSITION_THRESHOLD)
+        const WallpaperFrame *destination = nullptr;
+        for (const auto &frame : wallpaper.getFrames())
         {
-            // Mode A: short transition, full GPU animation.
-            surface.show();
-
-            if (!renderer.render(transition, &shutdownRequested))
+            if (frame.getImagePath() == transition.getToImage())
             {
-                if (!shutdownRequested)
-                    std::cerr << "Live transition rendering failed.\n";
-                running = false;
-                continue;
-            }
-
-            if (shutdownRequested)
+                destination = &frame;
                 break;
-
-            const WallpaperFrame *finalFrame =
-                findFrame(wallpaper, transition.getToImage());
-
-            if (!finalFrame)
-            {
-                std::cerr
-                    << "Could not find final transition frame: "
-                    << transition.getToImage() << '\n';
-                running = false;
-                continue;
             }
-
-            // The SDL surface is still showing the final frame. Hand the
-            // same image to the desktop before hiding the surface.
-            changer.setWallpaper(*finalFrame);
-            surface.hide();
         }
-        else
+
+        if (!destination)
         {
-            // Mode B: long transition. Generate one blended frame at a time
-            // and hand it to the normal desktop wallpaper API. No live SDL
-            // surface is shown, so Nemo/icons remain untouched.
-            const double interval = getPreBlendInterval(duration);
-            const auto start = std::chrono::steady_clock::now();
-
-            while (!shutdownRequested)
-            {
-                const auto now = std::chrono::steady_clock::now();
-                const double elapsed =
-                    std::chrono::duration<double>(now - start).count();
-                const double progress =
-                    std::clamp(elapsed / duration, 0.0, 1.0);
-
-                const std::string framePath =
-                    renderer.preBlendFrame(transition, progress);
-
-                if (framePath.empty())
-                {
-                    std::cerr << "Offline transition rendering failed.\n";
-                    running = false;
-                    break;
-                }
-
-                changer.setWallpaper(WallpaperFrame(framePath, 0));
-
-                if (progress >= 1.0)
-                    break;
-
-                const double remaining = duration - elapsed;
-                sleepUntilOrShutdown(std::min(interval, remaining));
-            }
+            std::cerr << "Could not find transition destination: "
+                      << transition.getToImage() << '\n';
+            break;
         }
+
+        changer.setWallpaper(*destination);
+        sleepUntilOrShutdown(transition.getDuration());
     }
 
-    surface.hide();
-    renderer.shutdown();
-    surface.shutdown();
-
-    if (shutdownRequested)
-        std::cout << "ChronoWall stopped cleanly.\n";
-
-    return running ? 0 : 1;
+    std::cout << "ChronoWall stopped.\n";
+    return 0;
 }
