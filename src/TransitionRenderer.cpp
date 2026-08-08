@@ -19,11 +19,16 @@ bool TransitionRenderer::render(const Transition &transition) const
         return false;
     }
 
+    // Fullscreen desktop resolution, borderless, and non-focusable.
+    // The desktop window type keeps this surface underneath normal windows
+    // while still allowing desktop icons/widgets to remain visible above it.
     SDL_Window *window = SDL_CreateWindow(
         "ChronoWall Transition",
         1280,
         720,
-        SDL_WINDOW_BORDERLESS);
+        SDL_WINDOW_FULLSCREEN |
+        SDL_WINDOW_BORDERLESS |
+        SDL_WINDOW_NOT_FOCUSABLE);
 
     if (!window)
     {
