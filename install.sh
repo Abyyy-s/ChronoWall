@@ -7,12 +7,13 @@ SERVICE_DIR="${HOME}/.config/systemd/user"
 BINARY="${PREFIX}/bin/chronowall"
 CONFIG_XML="${CONFIG_DIR}/wallpaper.xml"
 SERVICE="${SERVICE_DIR}/chronowall.service"
+DISPLAY_VALUE="${DISPLAY:-:0}"
 
 XML_PATH="${1:-}"
 
 if [[ -z "${XML_PATH}" ]]; then
-    echo "Usage: ./install.sh <wallpaper.xml>"
-    echo "Example: ./install.sh ~/Linux_Dynamic_Wallpapers/Dynamic_Wallpapers/StepbyStep.xml"
+    echo "Usage: bash install.sh <wallpaper.xml>"
+    echo "Example: bash install.sh ~/Linux_Dynamic_Wallpapers/Dynamic_Wallpapers/StepbyStep.xml"
     exit 1
 fi
 
@@ -52,7 +53,7 @@ Type=simple
 ExecStart=${BINARY} run ${CONFIG_XML}
 Restart=on-failure
 RestartSec=2
-Environment=DISPLAY=:0
+Environment=DISPLAY=${DISPLAY_VALUE}
 
 [Install]
 WantedBy=default.target
