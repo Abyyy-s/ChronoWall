@@ -39,9 +39,15 @@ cmake -S "${SCRIPT_DIR}" -B "${BUILD_DIR}" -DCMAKE_BUILD_TYPE=Release
 cmake --build "${BUILD_DIR}" --config Release -j"$(nproc)"
 
 mkdir -p "${PREFIX}/bin" "${CONFIG_DIR}" "${SERVICE_DIR}"
-install -m 0755 "${BUILD_DIR}/ChronoWall" "${BINARY}"
-install -m 0644 "${XML_PATH}" "${CONFIG_XML}"
 
+install -m 0755 "${BUILD_DIR}/ChronoWall" "${BINARY}"
+
+# Copy the complete wallpaper package so relative image paths work.
+XML_DIR="$(cd "$(dirname "${XML_PATH}")" && pwd)"
+cp -a "${XML_DIR}/." "${CONFIG_DIR}/"
+
+# The systemd service always uses this stable XML path.
+install -m 0644 "${XML_PATH}" "${CONFIG_XML}"
 cat > "${SERVICE}" <<EOF
 [Unit]
 Description=ChronoWall dynamic wallpaper daemon
