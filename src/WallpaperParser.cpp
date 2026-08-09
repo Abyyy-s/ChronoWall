@@ -1,10 +1,30 @@
 #include "WallpaperParser.h"
 
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <tinyxml2.h>
 #include <vector>
 #include "Transition.h"
+
+namespace
+{
+std::string resolveImagePath(const std::string &xmlPath,
+                             const std::string &imagePath)
+{
+    std::filesystem::path path(imagePath);
+
+    // Preserve existing absolute-path XML files for backwards compatibility.
+    if (path.is_absolute())
+        return path.lexically_normal().string();
+
+    // Relative paths are resolved from the directory containing the XML file.
+    const std::filesystem::path xmlFile =
+        std::filesystem::absolute(std::filesystem::path(xmlPath));
+
+    return (xmlFile.parent_path() / path).lexically_normal().string();
+}
+}
 
 std::vector<TimelineEvent> buildTimeline(
     const std::vector<WallpaperFrame> &frames,
@@ -161,7 +181,7 @@ DynamicWallpaper WallpaperParser::parse(std::string xmlPath)
             std::stod(duration->GetText());
 
         std::string imagePath =
-            file->GetText();
+            resolveImagePath(xmlPath, file->GetText());
 
         WallpaperFrame frame(
             imagePath,
@@ -231,10 +251,10 @@ DynamicWallpaper WallpaperParser::parse(std::string xmlPath)
             std::stod(duration->GetText());
 
         std::string fromImage =
-            from->GetText();
+            resolveImagePath(xmlPath, from->GetText());
 
         std::string toImage =
-            to->GetText();
+            resolveImagePath(xmlPath, to->GetText());
 
         Transition transition(
             fromImage,
