@@ -1,5 +1,6 @@
 #include "DynamicWallpaper.h"
 #include "WallpaperChanger.h"
+#include "WallpaperLibrary.h"
 #include "WallpaperParser.h"
 #include "WallpaperScheduler.h"
 
@@ -73,6 +74,9 @@ void printUsage()
         << "  chronowall stop                 Stop the installed user service\n"
         << "  chronowall restart              Restart the installed user service\n"
         << "  chronowall status               Show service status\n"
+        << "  chronowall list                 List available wallpapers\n"
+        << "  chronowall set <name>            Switch to a wallpaper\n"
+        << "  chronowall current              Show the current wallpaper\n"
         << "  chronowall --version            Show version\n"
         << "  chronowall --help               Show this help\n";
 }
@@ -83,6 +87,81 @@ int runServiceCommand(const char *command)
     shellCommand += command;
     shellCommand += " chronowall.service";
     return std::system(shellCommand.c_str());
+}
+
+std::string joinArguments(int argc, char *argv[], int first)
+{
+    std::string result;
+    for (int index = first; index < argc; ++index)
+    {
+        if (!result.empty())
+            result += ' ';
+        result += argv[index];
+    }
+    return result;
+}
+
+int listWallpapers()
+{
+    WallpaperLibrary library;
+    if (!library.isConfigured())
+    {
+        std::cerr << "Error: wallpaper library is not configured.\n"
+                  << "Install a wallpaper with install.sh first.\n";
+        return 1;
+    }
+
+    const auto wallpapers = library.list();
+    if (wallpapers.empty())
+    {
+        std::cout << "No wallpapers found in the configured library.\n";
+        return 0;
+    }
+
+    std::cout << "Available wallpapers (" << wallpapers.size() << "):\n\n";
+    for (const auto &name : wallpapers)
+        std::cout << "  " << name << '\n';
+
+    return 0;
+}
+
+int setWallpaper(const std::string &name)
+{
+    WallpaperLibrary library;
+    std::string error;
+
+    std::cout << "Switching wallpaper to " << name << "...\n";
+
+    if (!library.setWallpaper(name, error))
+    {
+        std::cerr << "Error: " << error << '\n';
+        return 1;
+    }
+
+    if (runServiceCommand("restart") != 0)
+    {
+        std::cerr << "Error: wallpaper was installed, but the ChronoWall service could not be restarted.\n";
+        return 1;
+    }
+
+    std::cout << "✓ Wallpaper changed to " << library.current() << '\n';
+    return 0;
+}
+
+int showCurrentWallpaper()
+{
+    WallpaperLibrary library;
+    const std::string current = library.current();
+
+    if (current.empty())
+    {
+        std::cerr << "No current wallpaper is recorded.\n"
+                  << "Install a wallpaper with install.sh first.\n";
+        return 1;
+    }
+
+    std::cout << "Current wallpaper: " << current << '\n';
+    return 0;
 }
 
 int runDaemon(const char *xmlPath)
@@ -212,6 +291,22 @@ int main(int argc, char *argv[])
         command == "restart" || command == "status")
     {
         return runServiceCommand(command.c_str());
+    }
+
+    if (command == "list")
+        return listWallpapers();
+
+    if (command == "current")
+        return showCurrentWallpaper();
+
+    if (command == "set")
+    {
+        if (argc < 3)
+        {
+            std::cerr << "Usage: chronowall set <wallpaper name>\n";
+            return 1;
+        }
+        return setWallpaper(joinArguments(argc, argv, 2));
     }
 
     // Backwards-compatible shorthand: chronowall <wallpaper.xml>
