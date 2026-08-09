@@ -42,7 +42,7 @@ Clone the repository and run the installer with a dynamic wallpaper XML file:
 git clone https://github.com/Abyyy-s/ChronoWall.git
 cd ChronoWall
 git checkout renderer-daemon
-./install.sh /path/to/wallpaper.xml
+bash install.sh /path/to/wallpaper.xml
 ```
 
 The installer:
@@ -94,7 +94,7 @@ The service starts automatically with the user's graphical session.
 From the repository:
 
 ```bash
-./uninstall.sh
+bash uninstall.sh
 ```
 
 This stops and disables the service and removes the installed binary, service file, and ChronoWall configuration directory.
@@ -160,4 +160,4 @@ v1 targets Cinnamon on Linux. Other desktop environments and custom rendering ba
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+MIT License. See [LICENSE](LICENSE) for details.
