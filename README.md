@@ -1,112 +1,223 @@
 # ChronoWall
 
-> Bring GNOME Dynamic Wallpapers to the Cinnamon Desktop.
+> Bring GNOME-style dynamic wallpapers to the Cinnamon desktop.
 
-ChronoWall is an open-source desktop utility written in Modern C++ that enables GNOME Dynamic XML wallpapers to work seamlessly on the Cinnamon desktop environment.
+ChronoWall is a lightweight C++17 daemon that reads GNOME-style dynamic wallpaper XML files and schedules their images on Cinnamon using `gsettings`.
 
----
+## v1.0.0
 
-## �� 🌟 Features Implemented
+ChronoWall v1 focuses on one job: make dynamic wallpaper timelines usable on Cinnamon without creating a permanent rendering window or running a continuous GPU/rendering loop.
 
-- � ✅ **Parse GNOME Dynamic Wallpaper XML files** - Fully compliant with the GNOME background XML format
-- � ✅ **Static Event Handling** - Correctly selects and applies static wallpaper images based on time-of-day
-- � ✅ **Transition Event Detection** - Accurately identifies transition periods in dynamic wallpapers (rendering pending)
-- � ✅ **Cinnamon Desktop Integration** - Uses GNOME Settings via `gsettings` to update the desktop background
-- � ✅ **Modern C++17** - Utilizes contemporary C++ standards for safety and performance
-- � ✅ **Lightweight & Native** - Minimal dependencies, standalone executable
-- � ✅ **Open Source** - MIT licensed
+ChronoWall parses the XML, determines the active timeline event from local time, applies the appropriate image through Cinnamon's wallpaper API, and then sleeps until the next event boundary.
 
----
+### Features
 
-## �� 🔧 How to Build
+- Parse GNOME dynamic wallpaper XML files
+- Respect `<starttime>`, `<static>`, and `<transition>` timeline entries
+- Correctly select the active event based on local time
+- Apply wallpapers through Cinnamon's `gsettings` API
+- Long-running daemon with signal-safe shutdown
+- systemd user-service integration
+- Simple CLI: `start`, `stop`, `restart`, `status`, and `run`
+- Release builds through CMake
+- Very low idle resource usage
+- No SDL, X11, or custom rendering window required by v1
 
-### Prerequisites
-- C++17 compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
-- CMake 3.16+
-- TinyXML2 library
+> **Important:** v1 preserves the timing of transition entries but does not perform a true pixel-by-pixel crossfade. The destination image is handed to Cinnamon and ChronoWall waits for the transition duration before advancing to the next event. Live crossfade rendering remains experimental and is kept outside the v1 implementation.
 
-### Build Steps
+## Requirements
+
+ChronoWall v1 targets **Linux Mint / Cinnamon**.
+
+On Debian/Ubuntu-based systems, install the build dependencies with:
+
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/ChronoWall.git
+sudo apt install build-essential cmake libtinyxml2-dev
+```
+
+`gsettings` is normally already available on Cinnamon desktops.
+
+## Installation
+
+Clone the repository and run the installer with a dynamic wallpaper XML file:
+
+```bash
+git clone https://github.com/Abyyy-s/ChronoWall.git
 cd ChronoWall
-
-# Create and enter build directory
-mkdir build && cd build
-
-# Configure and build
-cmake ..
-make
-
-# The executable will be created as './ChronoWall'
+./install.sh /path/to/wallpaper.xml
 ```
 
----
+The installer:
 
-## � ▶��️ How to Run
+1. Builds a Release binary with CMake.
+2. Installs `chronowall` into `~/.local/bin`.
+3. Copies the selected XML to `~/.config/chronowall/wallpaper.xml`.
+4. Creates a systemd user service.
+5. Enables and starts the service.
+
+Make sure `~/.local/bin` is in your `PATH`. If it is not, start a new shell or add it to your shell configuration.
+
+### Example
 
 ```bash
-# Run with a GNOME dynamic wallpaper XML file
-./ChronoWall /path/to/wallpaper.xml
-
-# Example with system wallpaper
-./ChronoWall /usr/share/backgrounds/Dynamic_Wallpapers/Aura.xml
+./install.sh ~/Linux_Dynamic_Wallpapers/Dynamic_Wallpapers/StepbyStep.xml
 ```
 
-### Expected Output
-- Success: `Wallpaper changed successfully!`
-- Error: Informative messages via stderr (missing XML elements, file not found, etc.)
-- Usage: `Usage: ./ChronoWall <wallpaper.xml>` (when arguments are incorrect)
+## CLI
 
----
+```bash
+chronowall --help
+chronowall --version
+chronowall status
+chronowall start
+chronowall stop
+chronowall restart
+```
 
-## �� ⚠��️ Current Limitations
+For debugging, run the daemon directly in the foreground:
 
-- �� 🔄 **Transitions Detected But Not Rendered** - The application correctly identifies transition periods in dynamic wallpapers but currently only displays the static image at the start of the transition. Full crossfade/overlay transition rendering is planned for future releases.
-- �� ⏰ **Timezone Handling** - Uses local system time without explicit timezone conversion (matches GNOME's behavior)
-- �� 🖼��️ **Image Format Support** - Relies on the underlying system's image loader (typically supports JPEG, PNG, SVG, etc.)
-- �� 🐧 **Desktop Environment** - Currently targets only Cinnamon (GNOME backend would require different settings API)
+```bash
+chronowall run /path/to/wallpaper.xml
+```
 
----
+The legacy shorthand is also supported:
 
-## �� 📈 Vision
+```bash
+chronowall /path/to/wallpaper.xml
+```
 
-ChronoWall aims to provide a lightweight, native, and extensible wallpaper engine for Linux users who want dynamic wallpapers without switching desktop environments.
+## Service and logs
 
----
+ChronoWall runs as a **systemd user service**, so `sudo` is not required to manage it.
 
-## �� 🎯 Goals
+```bash
+systemctl --user status chronowall.service
+journalctl --user -u chronowall.service -f
+```
 
-- [x] Parse GNOME Dynamic Wallpaper XML files
-- [x] Support Cinnamon Desktop
-- [ ] Lightweight (<5MB RAM, minimal CPU)
-- [x] Native Linux application
-- [x] Modern C++17
-- [x] Open Source
-- [ ] Add transition rendering (crossfade/overlay)
-- [ ] Add system tray indicator
-- [ ] Support additional desktop environments (GNOME, KDE Plasma)
+The service is enabled during installation and is intended to run with the user's graphical session.
 
----
+## Uninstall
 
-## �� 🛠��️ Development
+From the repository:
 
-ChronoWall is developed with:
-- **Modern C++** - Leveraging C++17 features for safety and clarity
-- **Clean Architecture** - Separation of concerns: parsing, scheduling, and desktop integration
-- **Minimal Dependencies** - Only requires TinyXML2 for XML parsing
-- **Thorough Testing** - Verified with multiple GNOME dynamic wallpaper XML files
+```bash
+./uninstall.sh
+```
 
----
+This stops and disables the service and removes:
 
-## �� 📄 License
+- `~/.local/bin/chronowall`
+- `~/.config/systemd/user/chronowall.service`
+- `~/.config/chronowall/`
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## How it works
 
----
+```text
+GNOME dynamic wallpaper XML
+            |
+            v
+     WallpaperParser
+            |
+            v
+       Timeline
+            |
+            v
+    WallpaperScheduler
+            |
+            v
+     WallpaperChanger
+            |
+            v
+       gsettings
+            |
+            v
+         Cinnamon
+```
 
-## �� 🙏 Acknowledgments
+The daemon does not continuously render the desktop. It evaluates the current timeline event, changes the wallpaper when the event changes, and sleeps until the next boundary.
 
-- GNOME Dynamic Wallpaper specification
-- TinyXML2 library for XML parsing
-- Cinnamon Desktop team for the GSettings API
+For a static event, the corresponding image is applied and the daemon sleeps for the event duration.
+
+For a transition event, the destination image is applied through Cinnamon's normal wallpaper API and the daemon waits for the transition duration. This keeps the XML timeline synchronized while avoiding the CPU/GPU-heavy rendering approach used by the experimental renderer.
+
+## Architecture
+
+The v1 implementation keeps the original parser/model/scheduler architecture:
+
+- `WallpaperParser`
+- `DynamicWallpaper`
+- `WallpaperFrame`
+- `Transition`
+- `TimelineEvent`
+- `WallpaperScheduler`
+- `WallpaperChanger`
+
+The runtime path is intentionally small:
+
+```text
+XML
+ ↓
+Parser
+ ↓
+Scheduler
+ ↓
+WallpaperChanger
+ ↓
+gsettings
+ ↓
+Cinnamon
+```
+
+Experimental SDL3/X11 rendering work is intentionally kept separate from the v1 implementation.
+
+## Development
+
+Build manually with CMake:
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+```
+
+Run the daemon directly:
+
+```bash
+./build/ChronoWall run /path/to/wallpaper.xml
+```
+
+## Troubleshooting
+
+### Check whether the daemon is running
+
+```bash
+chronowall status
+```
+
+### Follow daemon logs
+
+```bash
+journalctl --user -u chronowall.service -f
+```
+
+### Stop it immediately
+
+```bash
+chronowall stop
+```
+
+### Rebuild from scratch
+
+```bash
+rm -rf build build-release
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+```
+
+## Current scope
+
+v1 targets Cinnamon on Linux/X11. Other desktop environments, Windows support, and true live crossfade rendering are future work.
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.

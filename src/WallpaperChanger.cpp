@@ -1,6 +1,7 @@
 #include "WallpaperChanger.h"
 
 #include <cstdlib>
+#include <iostream>
 #include <string>
 
 void WallpaperChanger::setWallpaper(const WallpaperFrame &frame)
@@ -9,5 +10,10 @@ void WallpaperChanger::setWallpaper(const WallpaperFrame &frame)
         "gsettings set org.cinnamon.desktop.background picture-uri \"file://" + frame.getImagePath() +
         "\"";
 
-    std::system(command.c_str());
+    const int result = std::system(command.c_str());
+    if (result != 0)
+    {
+        std::cerr << "Warning: failed to set wallpaper: "
+                  << frame.getImagePath() << "\n";
+    }
 }
