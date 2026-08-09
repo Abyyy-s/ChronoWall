@@ -45,7 +45,11 @@ int getElapsedSeconds(const DynamicWallpaper &wallpaper)
 void sleepUntilOrShutdown(double seconds)
 {
     if (seconds <= 0.0)
-        return;
+    {
+        // Never allow the daemon to spin if an event boundary has already
+        // been reached due to clock granularity or rounding.
+        seconds = 0.05;
+    }
 
     timespec remaining{};
     remaining.tv_sec = static_cast<time_t>(seconds);
@@ -108,6 +112,10 @@ int runDaemon(const char *xmlPath)
     std::cout << "ChronoWall " << VERSION << " daemon started.\n"
               << "Wallpaper: " << xmlPath << '\n';
 
+    // An event is executed once. The daemon then sleeps until its end time.
+    // This prevents repeated gsettings calls while a transition is active.
+    const TimelineEvent *lastEvent = nullptr;
+
     while (!shutdownRequested)
     {
         const int elapsedSeconds = getElapsedSeconds(wallpaper);
@@ -120,40 +128,45 @@ int runDaemon(const char *xmlPath)
             return 1;
         }
 
-        if (event->getType() == TimelineEventType::Static)
+        if (event != lastEvent)
         {
-            const WallpaperFrame &frame =
-                wallpaper.getFrames()[event->getFrameIndex()];
-
-            changer.setWallpaper(frame);
-            std::cout << "[static] " << frame.getImagePath() << '\n';
-        }
-        else
-        {
-            const Transition &transition =
-                wallpaper.getTransitions()[event->getTransitionIndex()];
-
-            const WallpaperFrame *destination = nullptr;
-            for (const auto &frame : wallpaper.getFrames())
+            if (event->getType() == TimelineEventType::Static)
             {
-                if (frame.getImagePath() == transition.getToImage())
+                const WallpaperFrame &frame =
+                    wallpaper.getFrames()[event->getFrameIndex()];
+
+                changer.setWallpaper(frame);
+                std::cout << "[static] " << frame.getImagePath() << '\n';
+            }
+            else
+            {
+                const Transition &transition =
+                    wallpaper.getTransitions()[event->getTransitionIndex()];
+
+                const WallpaperFrame *destination = nullptr;
+                for (const auto &frame : wallpaper.getFrames())
                 {
-                    destination = &frame;
-                    break;
+                    if (frame.getImagePath() == transition.getToImage())
+                    {
+                        destination = &frame;
+                        break;
+                    }
                 }
+
+                if (!destination)
+                {
+                    std::cerr << "Error: transition destination not found: "
+                              << transition.getToImage() << '\n';
+                    return 1;
+                }
+
+                changer.setWallpaper(*destination);
+                std::cout << "[transition] " << transition.getFromImage()
+                          << " -> " << transition.getToImage()
+                          << " (" << transition.getDuration() << "s)\n";
             }
 
-            if (!destination)
-            {
-                std::cerr << "Error: transition destination not found: "
-                          << transition.getToImage() << '\n';
-                return 1;
-            }
-
-            changer.setWallpaper(*destination);
-            std::cout << "[transition] " << transition.getFromImage()
-                      << " -> " << transition.getToImage()
-                      << " (" << transition.getDuration() << "s)\n";
+            lastEvent = event;
         }
 
         const double remaining =
