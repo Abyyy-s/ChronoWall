@@ -13,6 +13,7 @@ add_executable(ChronoWall
     src/WallpaperParser.cpp
     src/WallpaperScheduler.cpp
     src/WallpaperChanger.cpp
+    src/WallpaperLibrary.cpp
     src/DynamicWallpaper.cpp
     src/Transition.cpp
     src/TimelineEvent.cpp
