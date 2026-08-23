@@ -17,6 +17,9 @@ add_executable(ChronoWall
     src/DynamicWallpaper.cpp
     src/Transition.cpp
     src/TimelineEvent.cpp
+    src/CinnamonBackend.cpp
+    src/KDEPlasmaBackend.cpp
+    src/WallpaperBackendFactory.cpp
 )
 
 target_include_directories(ChronoWall PRIVATE

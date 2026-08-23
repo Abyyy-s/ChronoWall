@@ -184,15 +184,22 @@ int runDaemon(const char *xmlPath)
 
     WallpaperScheduler scheduler;
     WallpaperChanger changer;
+    std::string backendError;
+    if (!changer.initialize(backendError))
+    {
+        std::cerr << "Error: " << backendError << '\n';
+        return 1;
+    }
 
     std::signal(SIGINT, handleShutdownSignal);
     std::signal(SIGTERM, handleShutdownSignal);
 
     std::cout << "ChronoWall " << VERSION << " daemon started.\n"
+              << "Backend: " << changer.getBackendName() << '\n'
               << "Wallpaper: " << xmlPath << '\n';
 
     // An event is executed once. The daemon then sleeps until its end time.
-    // This prevents repeated gsettings calls while a transition is active.
+    // This prevents repeated backend calls while a transition is active.
     const TimelineEvent *lastEvent = nullptr;
 
     while (!shutdownRequested)
