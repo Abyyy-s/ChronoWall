@@ -16,7 +16,7 @@
 
 namespace
 {
-constexpr const char *VERSION = "1.0.0";
+constexpr const char *VERSION = "2.0.0";
 volatile std::sig_atomic_t shutdownRequested = 0;
 
 void handleShutdownSignal(int)

@@ -1,15 +1,17 @@
 # Changelog
 
-## [Unreleased]
+## [2.0.0] - 2026-08-23
 
 ### Added
 
-- Native KDE Plasma 6 / 5 support (Wayland & X11) via `plasma-apply-wallpaperimage`.
-- Pluggable desktop wallpaper backend architecture (`WallpaperBackend`, `CinnamonBackend`, `KDEPlasmaBackend`).
-- Deterministic desktop detection and backend factory (`WallpaperBackendFactory`).
-- Explicit backend override support via `CHRONOWALL_BACKEND=<kde|cinnamon>`.
-- Modernized systemd user service with Wayland / D-Bus session support.
-- Multi-monitor wallpaper synchronization support under KDE Plasma.
+- **Multi-Desktop Support**: Native support for **KDE Plasma 6 / 5** (Wayland & X11) alongside **Cinnamon (X11)**.
+- **Desktop Wallpaper Backend Architecture**: Pluggable `WallpaperBackend` abstraction cleanly separating desktop integrations from core scheduling and parsing.
+- **KDE Plasma Backend**: Integrates with KDE's native `plasma-apply-wallpaperimage` utility to apply wallpapers across all connected monitors/displays.
+- **Cinnamon Backend**: Retains native `gsettings` integration for Linux Mint / Cinnamon desktops.
+- **Deterministic Desktop Factory**: `WallpaperBackendFactory` provides automatic desktop environment detection (`XDG_CURRENT_DESKTOP`, `XDG_SESSION_DESKTOP`, `DESKTOP_SESSION`) and explicit backend overrides via `CHRONOWALL_BACKEND=<kde|cinnamon>`.
+- **Modernized Systemd User Service**: Clean user service integration bound to `graphical-session.target` relying on session D-Bus without X11-only display dependencies.
+- **Shell PATH Auto-Configuration**: Installer automatically verifies and configures `~/.local/bin` in user shell profiles (`~/.zshrc`, `~/.bashrc`, `~/.profile`).
+- **Comprehensive Documentation**: Detailed architecture guide, multi-distro dependency guides (Debian/Ubuntu, Fedora), and companion wallpaper repository workflow.
 
 ## [1.0.0] - 2026-08-09
 

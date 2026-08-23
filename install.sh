@@ -117,7 +117,7 @@ systemctl --user enable --now chronowall.service
 
 echo
 echo "ChronoWall installed successfully."
-echo "Version: 1.0.0"
+echo "Version: 2.0.0"
 echo "Wallpaper: ${CONFIG_XML}"
 echo
 echo "Commands:"
