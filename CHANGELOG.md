@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Native KDE Plasma 6 / 5 support (Wayland & X11) via `plasma-apply-wallpaperimage`.
+- Pluggable desktop wallpaper backend architecture (`WallpaperBackend`, `CinnamonBackend`, `KDEPlasmaBackend`).
+- Deterministic desktop detection and backend factory (`WallpaperBackendFactory`).
+- Explicit backend override support via `CHRONOWALL_BACKEND=<kde|cinnamon>`.
+- Modernized systemd user service with Wayland / D-Bus session support.
+- Multi-monitor wallpaper synchronization support under KDE Plasma.
+
 ## [1.0.0] - 2026-08-09
 
 ### Added
