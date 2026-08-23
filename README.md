@@ -14,30 +14,29 @@
 
 ## ✨ What is ChronoWall?
 
-ChronoWall reads **GNOME dynamic wallpaper XML files**, determines which timeline event should currently be active, and applies the corresponding image to **Cinnamon** (via `gsettings`) or **KDE Plasma** (via `plasma-apply-wallpaperimage`).
+ChronoWall reads **GNOME dynamic wallpaper XML files**, evaluates the active timeline event based on the current time of day, and applies the corresponding image to **Cinnamon** (via `gsettings`) or **KDE Plasma** (via `plasma-apply-wallpaperimage`).
 
-Instead of continuously rendering the desktop, ChronoWall changes the wallpaper when the timeline changes and then **sleeps until the next event boundary**.
+Instead of continuously running a GPU rendering loop or holding open a window surface, ChronoWall changes the wallpaper at timeline event boundaries and then **sleeps until the next event transition**.
 
 ### Why ChronoWall?
 
-- ⚡ Lightweight C++17 daemon
-- 🕐 Time-aware dynamic wallpaper scheduling
-- 🖼️ GNOME-style XML compatibility
-- 🧩 Relative image-path support
-- 🖥️ Native Cinnamon & KDE Plasma (Wayland / X11) wallpaper integration
-- 🔋 Very low idle resource usage (sleeps between event boundaries)
-- ⚙️ systemd user-service integration
-- 🚫 No permanent rendering window
-- 🚫 No continuous GPU/rendering loop
-- ⌨️ Simple CLI
+- ⚡ **Lightweight C++17 daemon** — minimal CPU usage and low memory footprint
+- 🕐 **Time-aware scheduling** — evaluates 24-hour timeline cycles and event durations
+- 🖼️ **GNOME-style XML compatibility** — parses standard `<starttime>`, `<static>`, and `<transition>` tags
+- 🧩 **Relative image-path support** — self-contained wallpaper packages
+- 🖥️ **Native desktop integration** — first-class support for **Cinnamon (X11)** and **KDE Plasma 6 / 5 (Wayland & X11)**
+- 🔋 **Zero persistent sleep overhead** — sleeps via `nanosleep()` between event boundaries
+- ⚙️ **systemd user-service integration** — manages backgrounds cleanly within the user's graphical session
+- 🚫 **No permanent rendering window** — integrates directly with desktop environment wallpaper engines
+- ⌨️ **Simple CLI** — manage, list, inspect, and switch wallpapers easily
 
 ---
 
 # 🎨 See the Wallpapers in Action
 
-The companion **[ChronoWall Wallpapers](https://github.com/Abyyy-s/ChronoWall-Wallpapers)** repository contains the full-resolution wallpaper collection and animated previews.
+ChronoWall is the **engine**. Full-resolution wallpaper packages, XML definitions, and animated previews are maintained in the separate companion repository:
 
-These are real animated previews from the collection — they play directly on GitHub.
+👉 **[ChronoWall Wallpapers Repository](https://github.com/Abyyy-s/ChronoWall-Wallpapers)**
 
 ### 🌄 Landscapes
 
@@ -55,41 +54,41 @@ These are real animated previews from the collection — they play directly on G
 
 ---
 
-# 🚀 Installation
+# 🚀 Installation & Setup
 
-## Requirements
+## 1. Prerequisites
 
-ChronoWall supports **Linux Mint / Cinnamon** and **KDE Plasma (Wayland / X11)** on Linux distributions.
+### Build Dependencies
+ChronoWall requires only standard C++17 build tools and TinyXML2:
 
-On **Debian / Ubuntu / Linux Mint**:
+- **Debian / Ubuntu / Linux Mint**:
+  ```bash
+  sudo apt install build-essential cmake libtinyxml2-dev
+  ```
+
+- **Fedora**:
+  ```bash
+  sudo dnf install gcc-c++ cmake tinyxml2-devel
+  ```
+
+### Desktop Runtime Prerequisites
+ChronoWall interfaces with the desktop's native wallpaper utility at runtime:
+- **KDE Plasma (Wayland / X11)**: `plasma-apply-wallpaperimage` (provided by `plasma-workspace`, installed by default on KDE Plasma).
+- **Cinnamon (X11)**: `gsettings` (installed by default on Cinnamon).
+
+---
+
+## 2. Get the Wallpaper Collection
+
+ChronoWall itself does not bundle the full wallpaper asset packages. Download or clone the companion collection:
+
 ```bash
-sudo apt install build-essential cmake libtinyxml2-dev
+git clone https://github.com/Abyyy-s/ChronoWall-Wallpapers.git ~/Projects/ChronoWall-Wallpapers
 ```
 
-On **Fedora**:
-```bash
-sudo dnf install gcc-c++ cmake tinyxml2-devel plasma-workspace
-```
+*(Alternatively, download the latest archive from [ChronoWall Wallpapers Releases](https://github.com/Abyyy-s/ChronoWall-Wallpapers/releases).)*
 
-`gsettings` is standard on Cinnamon desktops, and `plasma-apply-wallpaperimage` is provided by `plasma-workspace` on KDE Plasma.
-
-## 1. Clone ChronoWall
-
-```bash
-git clone https://github.com/Abyyy-s/ChronoWall.git
-cd ChronoWall
-```
-
-## 2. Choose a Dynamic Wallpaper
-
-The easiest way to get wallpapers is the companion collection:
-
-👉 **[ChronoWall Wallpapers](https://github.com/Abyyy-s/ChronoWall-Wallpapers/releases)**
-
-Download the latest wallpaper archive and extract it.
-
-A wallpaper is organized like this:
-
+A dynamic wallpaper package is organized as follows:
 ```text
 wallpapers/
 └── StepbyStep/
@@ -99,74 +98,109 @@ wallpapers/
         └── StepbyStep-2.png
 ```
 
-## 3. Install ChronoWall with a Wallpaper
+---
 
-From the ChronoWall source directory:
+## 3. Clone & Install ChronoWall
 
-```bash
-./install.sh /path/to/wallpaper.xml
-```
-
-Example:
+From the ChronoWall source directory, run `install.sh` and pass the path to any wallpaper XML from your collection:
 
 ```bash
+git clone https://github.com/Abyyy-s/ChronoWall.git
+cd ChronoWall
+
 ./install.sh ~/Projects/ChronoWall-Wallpapers/wallpapers/StepbyStep/StepbyStep.xml
 ```
 
-The installer:
+### What `install.sh` does:
+1. **Detects Desktop**: Automatically identifies KDE Plasma vs Cinnamon and validates runtime tools.
+2. **Compiles Release Binary**: Builds `ChronoWall` with CMake in Release mode.
+3. **Installs Binary**: Installs executable to `~/.local/bin/chronowall`.
+4. **Configures PATH**: Verifies if `~/.local/bin` is in `$PATH` and automatically adds it to your shell configuration (`~/.zshrc`, `~/.bashrc`, or `~/.profile`) if needed.
+5. **Deploys Wallpaper Package**: Copies the initial wallpaper package to `~/.config/chronowall/` and saves the collection path.
+6. **Configures & Starts Service**: Creates and enables a `systemd --user` service (`chronowall.service`) bound to `graphical-session.target`.
 
-1. Builds a Release binary with CMake.
-2. Installs `chronowall` into `~/.local/bin`.
-3. Copies the selected XML to `~/.config/chronowall/wallpaper.xml`.
-4. Creates a systemd user service.
-5. Enables and starts the service.
-
-Make sure `~/.local/bin` is in your `PATH`.
-
----
-
-# ⌨️ CLI
-
-```bash
-chronowall --help
-chronowall --version
-chronowall status
-chronowall start
-chronowall stop
-chronowall restart
-```
-
-For testing or debugging a wallpaper directly:
-
-```bash
-chronowall run /path/to/wallpaper.xml
-```
-
-The legacy shorthand is also supported:
-
-```bash
-chronowall /path/to/wallpaper.xml
-```
+> [!NOTE]
+> If `~/.local/bin` was just added to your shell configuration by the installer, reload your shell (`source ~/.zshrc` or `source ~/.bashrc`) or open a new terminal window for the `chronowall` command to be immediately available.
 
 ---
 
-# 🛠️ Service & Logs
+# ⌨️ CLI Usage
 
-ChronoWall runs as a **systemd user service**, so `sudo` is not required to manage it.
+ChronoWall provides a complete CLI interface to manage wallpapers and background services:
 
-```bash
-systemctl --user status chronowall.service
+```text
+Usage:
+  chronowall run <wallpaper.xml>  Run the daemon in the foreground
+  chronowall start                Start the installed user service
+  chronowall stop                 Stop the installed user service
+  chronowall restart              Restart the installed user service
+  chronowall status               Show service status
+  chronowall list                 List available wallpapers
+  chronowall set <name>           Switch to a wallpaper
+  chronowall current              Show the current wallpaper
+  chronowall --version            Show version
+  chronowall --help               Show this help
 ```
 
-Follow live logs with:
+### Common Commands
 
-```bash
-journalctl --user -u chronowall.service -f
-```
+- **List available wallpapers in your collection**:
+  ```bash
+  chronowall list
+  ```
+
+- **Switch active wallpaper by name**:
+  ```bash
+  chronowall set Mojave
+  ```
+  *(Note: Wallpaper names match the package directory name and are case-sensitive.)*
+
+- **Show currently active wallpaper**:
+  ```bash
+  chronowall current
+  ```
+
+- **Service management**:
+  ```bash
+  chronowall status
+  chronowall stop
+  chronowall start
+  chronowall restart
+  ```
+
+- **Run in foreground for debugging/testing**:
+  ```bash
+  chronowall run ~/Projects/ChronoWall-Wallpapers/wallpapers/MagicLake/MagicLake.xml
+  ```
 
 ---
 
-# 🧠 How It Works
+# 🛠️ Systemd User Service & Logs
+
+ChronoWall runs as a **systemd user service** (`systemctl --user`), so `sudo` is never required.
+
+- **Check Service Status**:
+  ```bash
+  chronowall status
+  # or directly:
+  systemctl --user status chronowall.service
+  ```
+
+- **Follow Live Logs**:
+  ```bash
+  journalctl --user -u chronowall.service -f
+  ```
+
+- **Start / Stop / Restart**:
+  ```bash
+  chronowall stop
+  chronowall start
+  chronowall restart
+  ```
+
+---
+
+# 🧠 How It Works & Architecture
 
 ```text
 ┌──────────────────────────────┐
@@ -174,26 +208,26 @@ journalctl --user -u chronowall.service -f
 └──────────────┬───────────────┘
                ↓
        ┌───────────────┐
-       │ WallpaperParser│
+       │ WallpaperParser│  (Parses XML, resolves image paths)
        └───────┬───────┘
                ↓
        ┌───────────────┐
-       │    Timeline   │
-       └───────┬───────┘
-               ↓
-       ┌───────────────┐
-       │ Wallpaper     │
-       │ Scheduler     │
+       │    Timeline   │  (Calculates 24-hour event timeline)
        └───────┬───────┘
                ↓
        ┌───────────────┐
        │ Wallpaper     │
-       │ Changer       │
+       │ Scheduler     │  (Identifies active timeline event)
        └───────┬───────┘
                ↓
        ┌───────────────┐
        │ Wallpaper     │
-       │ BackendFactory│
+       │ Changer       │  (Desktop-agnostic coordinator)
+       └───────┬───────┘
+               ↓
+       ┌───────────────┐
+       │ Wallpaper     │
+       │ BackendFactory│  (Deterministic environment detection)
        └───┬───────┬───┘
            │       │
            ▼       ▼
@@ -201,153 +235,23 @@ journalctl --user -u chronowall.service -f
   (gsettings)    (plasma-apply-wallpaperimage)
 ```
 
-The runtime path is intentionally clean and modular:
-
-```text
-XML → Parser → Scheduler → WallpaperChanger → Desktop Backend → Desktop
-```
-
-ChronoWall evaluates the current event, applies the appropriate image, and sleeps until the next event boundary.
-
----
-
-# 📄 XML Support
-
-ChronoWall understands the important timeline elements used by GNOME dynamic wallpapers, including:
-
-- `<starttime>`
-- `<static>`
-- `<transition>`
-- Event durations
-- Relative image paths
-
-For example:
-
-```xml
-<static>
-    <file>StepbyStep/StepbyStep-1.png</file>
-    <duration>5.0</duration>
-</static>
-
-<transition type="overlay">
-    <duration>5.0</duration>
-    <from>StepbyStep/StepbyStep-1.png</from>
-    <to>StepbyStep/StepbyStep-2.png</to>
-</transition>
-```
-
-Relative paths are resolved from the directory containing the XML file, allowing a wallpaper package to remain self-contained.
+### Core Architecture Components
+- **`WallpaperParser`**: Parses GNOME XML definitions and resolves image paths.
+- **`DynamicWallpaper`**: Data model for frames, transitions, and timeline.
+- **`WallpaperScheduler`**: Evaluates timeline events based on local time of day.
+- **`WallpaperBackend`**: Abstract interface for desktop wallpaper integration.
+- **`CinnamonBackend`**: Applies wallpaper via Cinnamon's `gsettings` desktop background schema.
+- **`KDEPlasmaBackend`**: Applies wallpaper across all connected displays via KDE's `plasma-apply-wallpaperimage`.
+- **`WallpaperBackendFactory`**: Determines active desktop environment or explicit `CHRONOWALL_BACKEND` override.
+- **`WallpaperChanger`**: Coordinates wallpaper application with the active backend.
 
 ---
 
-# ⚠️ About Transitions in v1.0.0
+# ⚙️ Configuration & Backend Override
 
-ChronoWall v1 preserves the **timing and structure** of transition events, but the stable v1 implementation does **not** perform a true pixel-by-pixel crossfade.
+ChronoWall automatically detects whether it is running under **KDE Plasma** or **Cinnamon** using session variables (`XDG_CURRENT_DESKTOP`, `XDG_SESSION_DESKTOP`, `DESKTOP_SESSION`).
 
-For a transition event, ChronoWall applies the destination image through the desktop's native wallpaper API and waits for the transition duration before advancing to the next timeline event.
-
-Experimental live rendering work is kept separate from the stable v1 implementation.
-
----
-
-# 🏗️ Architecture
-
-The modular architecture cleanly decouples the core engine from desktop-specific integration:
-
-```text
-WallpaperParser
-      ↓
-DynamicWallpaper
-      ↓
-TimelineEvent
-      ↓
-WallpaperScheduler
-      ↓
-WallpaperChanger
-      ↓
-WallpaperBackend (Interface)
-  ├── CinnamonBackend (gsettings)
-  └── KDEPlasmaBackend (plasma-apply-wallpaperimage)
-```
-
-Core components include:
-
-- `WallpaperParser`: Parses GNOME XML and resolves image paths.
-- `DynamicWallpaper`: Data model for frames, transitions, and timeline.
-- `WallpaperFrame`: Individual frame metadata.
-- `Transition`: Transition event definition.
-- `TimelineEvent`: 24-hour timeline event scheduler unit.
-- `WallpaperScheduler`: Desktop-independent timeline calculator.
-- `WallpaperBackend`: Abstract desktop wallpaper backend interface.
-- `CinnamonBackend`: Cinnamon desktop integration via `gsettings`.
-- `KDEPlasmaBackend`: KDE Plasma (Wayland & X11) desktop integration via `plasma-apply-wallpaperimage`.
-- `WallpaperBackendFactory`: Deterministic backend detection and instantiation.
-- `WallpaperChanger`: High-level wallpaper coordinator.
-
----
-
-# 🧪 Development
-
-Build manually with CMake:
-
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j$(nproc)
-```
-
-Run directly:
-
-```bash
-./build/ChronoWall run /path/to/wallpaper.xml
-```
-
----
-
-# 🗑️ Uninstall
-
-From the repository:
-
-```bash
-./uninstall.sh
-```
-
-This stops and disables the service and removes the ChronoWall executable, service file, and configuration directory.
-
----
-
-# 🐛 Troubleshooting
-
-### Check whether ChronoWall is running
-
-```bash
-chronowall status
-```
-
-### Follow daemon logs
-
-```bash
-journalctl --user -u chronowall.service -f
-```
-
-### Stop it immediately
-
-```bash
-chronowall stop
-```
-
-### Rebuild from scratch
-
-```bash
-rm -rf build build-release
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build -j$(nproc)
-```
-
-### Backend Selection & Override
-
-ChronoWall automatically detects whether it is running under **KDE Plasma** or **Cinnamon** using standard session environment variables (`XDG_CURRENT_DESKTOP`, `XDG_SESSION_DESKTOP`, `DESKTOP_SESSION`).
-
-To explicitly force a specific backend, set the `CHRONOWALL_BACKEND` environment variable:
+To explicitly force a specific backend, set `CHRONOWALL_BACKEND`:
 
 ```bash
 # Force KDE Plasma backend
@@ -359,11 +263,39 @@ CHRONOWALL_BACKEND=cinnamon chronowall run /path/to/wallpaper.xml
 
 ---
 
+# 🧪 Manual Compilation
+
+Build manually using CMake:
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+```
+
+Run directly:
+```bash
+./build/ChronoWall run /path/to/wallpaper.xml
+```
+
+---
+
+# 🗑️ Uninstallation
+
+From the ChronoWall repository:
+
+```bash
+./uninstall.sh
+```
+
+This stops and disables the systemd user service, removes `~/.local/bin/chronowall`, removes the service unit, and removes configuration at `~/.config/chronowall/`.
+
+---
+
 # 🗺️ Current Scope
 
 | Area | Status |
 |---|---|
-| Linux (Fedora, Debian, Ubuntu, Mint, Arch) | ✅ |
+| Linux (Fedora, Debian, Ubuntu, Mint, Arch, etc.) | ✅ |
 | Cinnamon Desktop (X11) | ✅ |
 | KDE Plasma 6 / 5 (Wayland & X11) | ✅ |
 | GNOME-style XML timelines | ✅ |
@@ -378,38 +310,18 @@ CHRONOWALL_BACKEND=cinnamon chronowall run /path/to/wallpaper.xml
 
 ---
 
-# 📦 Wallpaper Collection
-
-Looking for wallpapers rather than the engine?
-
-### 👉 [ChronoWall Wallpapers](https://github.com/Abyyy-s/ChronoWall-Wallpapers)
-
-The companion repository contains:
-
-- **109 dynamic wallpaper definitions**
-- **109 XML configurations**
-- **107 animated preview GIFs**
-- Full-resolution wallpaper assets
-- Attribution and source information
-- A downloadable v1.0.0 collection archive
-
----
-
 # 🤝 Contributing
 
 Found a bug, broken XML file, or compatibility issue?
+Open an issue or submit a pull request on GitHub.
 
-Open an issue or submit a pull request with a clear description of the change.
-
-For wallpaper contributions, please include appropriate attribution and licensing information.
+For wallpaper contributions, visit the companion [ChronoWall Wallpapers](https://github.com/Abyyy-s/ChronoWall-Wallpapers) repository.
 
 ---
 
 # 📜 License
 
-ChronoWall is released under the **MIT License**.
-
-See [`LICENSE`](LICENSE) for details.
+ChronoWall is released under the **MIT License**. See [`LICENSE`](LICENSE) for details.
 
 ---
 

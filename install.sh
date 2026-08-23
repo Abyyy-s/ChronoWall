@@ -64,6 +64,27 @@ mkdir -p "${PREFIX}/bin" "${CONFIG_DIR}" "${SERVICE_DIR}"
 
 install -m 0755 "${BUILD_DIR}/ChronoWall" "${BINARY}"
 
+# Ensure ~/.local/bin is in PATH for shell sessions
+if [[ ":${PATH}:" != *":${HOME}/.local/bin:"* ]]; then
+    SHELL_NAME="$(basename "${SHELL:-bash}")"
+    SHELL_RC=""
+    if [[ "${SHELL_NAME}" == "zsh" && -f "${HOME}/.zshrc" ]]; then
+        SHELL_RC="${HOME}/.zshrc"
+    elif [[ -f "${HOME}/.bashrc" ]]; then
+        SHELL_RC="${HOME}/.bashrc"
+    elif [[ -f "${HOME}/.profile" ]]; then
+        SHELL_RC="${HOME}/.profile"
+    fi
+
+    if [[ -n "${SHELL_RC}" ]]; then
+        if ! grep -Eq '^[[:space:]]*export[[:space:]]+PATH=.*\.local/bin' "${SHELL_RC}" 2>/dev/null; then
+            printf '\n# Added by ChronoWall\nexport PATH="%s/.local/bin:${PATH}"\n' "${HOME}" >> "${SHELL_RC}"
+            echo "Added ~/.local/bin to PATH in ${SHELL_RC}."
+        fi
+    fi
+    export PATH="${HOME}/.local/bin:${PATH}"
+fi
+
 # Copy the complete wallpaper package so relative image paths work.
 XML_DIR="$(cd "$(dirname "${XML_PATH}")" && pwd)"
 cp -a "${XML_DIR}/." "${CONFIG_DIR}/"
