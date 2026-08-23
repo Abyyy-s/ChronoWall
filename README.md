@@ -1,6 +1,6 @@
 # 🕒 ChronoWall
 
-> **GNOME-style dynamic wallpapers for the Cinnamon desktop.**
+> **GNOME-style dynamic wallpapers for Cinnamon and KDE Plasma desktops.**
 >
 > A lightweight C++17 daemon that turns dynamic wallpaper timelines into time-aware desktop backgrounds — without a permanent rendering window or a continuous rendering loop.
 
@@ -14,7 +14,7 @@
 
 ## ✨ What is ChronoWall?
 
-ChronoWall reads **GNOME dynamic wallpaper XML files**, determines which timeline event should currently be active, and applies the corresponding image to Cinnamon through `gsettings`.
+ChronoWall reads **GNOME dynamic wallpaper XML files**, determines which timeline event should currently be active, and applies the corresponding image to **Cinnamon** (via `gsettings`) or **KDE Plasma** (via `plasma-apply-wallpaperimage`).
 
 Instead of continuously rendering the desktop, ChronoWall changes the wallpaper when the timeline changes and then **sleeps until the next event boundary**.
 
@@ -24,11 +24,11 @@ Instead of continuously rendering the desktop, ChronoWall changes the wallpaper 
 - 🕐 Time-aware dynamic wallpaper scheduling
 - 🖼️ GNOME-style XML compatibility
 - 🧩 Relative image-path support
-- 🖥️ Native Cinnamon wallpaper integration
-- 🔋 Very low idle resource usage
+- 🖥️ Native Cinnamon & KDE Plasma (Wayland / X11) wallpaper integration
+- 🔋 Very low idle resource usage (sleeps between event boundaries)
 - ⚙️ systemd user-service integration
 - 🚫 No permanent rendering window
-- 🚫 No continuous GPU/rendering loop in v1
+- 🚫 No continuous GPU/rendering loop
 - ⌨️ Simple CLI
 
 ---
@@ -59,15 +59,19 @@ These are real animated previews from the collection — they play directly on G
 
 ## Requirements
 
-ChronoWall v1 targets **Linux Mint / Cinnamon**.
+ChronoWall supports **Linux Mint / Cinnamon** and **KDE Plasma (Wayland / X11)** on Linux distributions.
 
-On Debian/Ubuntu-based systems, install the build dependencies:
-
+On **Debian / Ubuntu / Linux Mint**:
 ```bash
 sudo apt install build-essential cmake libtinyxml2-dev
 ```
 
-`gsettings` is normally already available on Cinnamon desktops.
+On **Fedora**:
+```bash
+sudo dnf install gcc-c++ cmake tinyxml2-devel plasma-workspace
+```
+
+`gsettings` is standard on Cinnamon desktops, and `plasma-apply-wallpaperimage` is provided by `plasma-workspace` on KDE Plasma.
 
 ## 1. Clone ChronoWall
 
@@ -187,15 +191,20 @@ journalctl --user -u chronowall.service -f
        │ Changer       │
        └───────┬───────┘
                ↓
-          `gsettings`
-               ↓
-          🖥️ Cinnamon
+       ┌───────────────┐
+       │ Wallpaper     │
+       │ BackendFactory│
+       └───┬───────┬───┘
+           │       │
+           ▼       ▼
+    Cinnamon       KDE Plasma
+  (gsettings)    (plasma-apply-wallpaperimage)
 ```
 
-The runtime path is intentionally small:
+The runtime path is intentionally clean and modular:
 
 ```text
-XML → Parser → Scheduler → WallpaperChanger → gsettings → Cinnamon
+XML → Parser → Scheduler → WallpaperChanger → Desktop Backend → Desktop
 ```
 
 ChronoWall evaluates the current event, applies the appropriate image, and sleeps until the next event boundary.
@@ -235,7 +244,7 @@ Relative paths are resolved from the directory containing the XML file, allowing
 
 ChronoWall v1 preserves the **timing and structure** of transition events, but the stable v1 implementation does **not** perform a true pixel-by-pixel crossfade.
 
-For a transition event, ChronoWall applies the destination image through Cinnamon's normal wallpaper API and waits for the transition duration before advancing to the next timeline event.
+For a transition event, ChronoWall applies the destination image through the desktop's native wallpaper API and waits for the transition duration before advancing to the next timeline event.
 
 Experimental live rendering work is kept separate from the stable v1 implementation.
 
@@ -243,7 +252,7 @@ Experimental live rendering work is kept separate from the stable v1 implementat
 
 # 🏗️ Architecture
 
-The v1 implementation keeps the parser/model/scheduler architecture:
+The modular architecture cleanly decouples the core engine from desktop-specific integration:
 
 ```text
 WallpaperParser
@@ -256,18 +265,24 @@ WallpaperScheduler
       ↓
 WallpaperChanger
       ↓
-gsettings
+WallpaperBackend (Interface)
+  ├── CinnamonBackend (gsettings)
+  └── KDEPlasmaBackend (plasma-apply-wallpaperimage)
 ```
 
 Core components include:
 
-- `WallpaperParser`
-- `DynamicWallpaper`
-- `WallpaperFrame`
-- `Transition`
-- `TimelineEvent`
-- `WallpaperScheduler`
-- `WallpaperChanger`
+- `WallpaperParser`: Parses GNOME XML and resolves image paths.
+- `DynamicWallpaper`: Data model for frames, transitions, and timeline.
+- `WallpaperFrame`: Individual frame metadata.
+- `Transition`: Transition event definition.
+- `TimelineEvent`: 24-hour timeline event scheduler unit.
+- `WallpaperScheduler`: Desktop-independent timeline calculator.
+- `WallpaperBackend`: Abstract desktop wallpaper backend interface.
+- `CinnamonBackend`: Cinnamon desktop integration via `gsettings`.
+- `KDEPlasmaBackend`: KDE Plasma (Wayland & X11) desktop integration via `plasma-apply-wallpaperimage`.
+- `WallpaperBackendFactory`: Deterministic backend detection and instantiation.
+- `WallpaperChanger`: High-level wallpaper coordinator.
 
 ---
 
@@ -328,19 +343,35 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j$(nproc)
 ```
 
+### Backend Selection & Override
+
+ChronoWall automatically detects whether it is running under **KDE Plasma** or **Cinnamon** using standard session environment variables (`XDG_CURRENT_DESKTOP`, `XDG_SESSION_DESKTOP`, `DESKTOP_SESSION`).
+
+To explicitly force a specific backend, set the `CHRONOWALL_BACKEND` environment variable:
+
+```bash
+# Force KDE Plasma backend
+CHRONOWALL_BACKEND=kde chronowall run /path/to/wallpaper.xml
+
+# Force Cinnamon backend
+CHRONOWALL_BACKEND=cinnamon chronowall run /path/to/wallpaper.xml
+```
+
 ---
 
 # 🗺️ Current Scope
 
-| Area | v1.0.0 |
+| Area | Status |
 |---|---|
-| Linux | ✅ |
-| Cinnamon | ✅ |
-| GNOME-style XML | ✅ |
+| Linux (Fedora, Debian, Ubuntu, Mint, Arch) | ✅ |
+| Cinnamon Desktop (X11) | ✅ |
+| KDE Plasma 6 / 5 (Wayland & X11) | ✅ |
+| GNOME-style XML timelines | ✅ |
 | Time-based scheduling | ✅ |
 | Relative wallpaper paths | ✅ |
 | systemd user service | ✅ |
 | Low idle resource usage | ✅ |
+| Multi-monitor synchronized wallpapers | ✅ |
 | True live pixel crossfade | 🚧 Experimental |
 | Other desktop environments | 🔮 Future |
 | Windows support | 🔮 Future |
