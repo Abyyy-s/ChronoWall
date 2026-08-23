@@ -7,7 +7,6 @@ SERVICE_DIR="${HOME}/.config/systemd/user"
 BINARY="${PREFIX}/bin/chronowall"
 CONFIG_XML="${CONFIG_DIR}/wallpaper.xml"
 SERVICE="${SERVICE_DIR}/chronowall.service"
-DISPLAY_VALUE="${DISPLAY:-:0}"
 
 XML_PATH="${1:-}"
 
@@ -27,9 +26,32 @@ if ! command -v cmake >/dev/null 2>&1; then
     exit 1
 fi
 
-if ! command -v gsettings >/dev/null 2>&1; then
-    echo "Error: gsettings is required (Cinnamon desktop)." >&2
-    exit 1
+DESKTOP="${XDG_CURRENT_DESKTOP:-${XDG_SESSION_DESKTOP:-${DESKTOP_SESSION:-}}}"
+DESKTOP_LOWER="$(echo "${DESKTOP}" | tr '[:upper:]' '[:lower:]')"
+
+if [[ "${DESKTOP_LOWER}" =~ kde|plasma ]]; then
+    echo "Detected desktop: KDE Plasma"
+    if ! command -v plasma-apply-wallpaperimage >/dev/null 2>&1; then
+        echo "Error: plasma-apply-wallpaperimage is required (plasma-workspace)." >&2
+        exit 1
+    fi
+elif [[ "${DESKTOP_LOWER}" =~ cinnamon|x-cinnamon ]]; then
+    echo "Detected desktop: Cinnamon"
+    if ! command -v gsettings >/dev/null 2>&1; then
+        echo "Error: gsettings is required (Cinnamon desktop)." >&2
+        exit 1
+    fi
+else
+    echo "Warning: Desktop environment '${DESKTOP}' not recognized automatically."
+    echo "Checking available wallpaper backend tools..."
+    if command -v plasma-apply-wallpaperimage >/dev/null 2>&1; then
+        echo "Found plasma-apply-wallpaperimage (KDE Plasma backend)."
+    elif command -v gsettings >/dev/null 2>&1; then
+        echo "Found gsettings (Cinnamon backend)."
+    else
+        echo "Error: Neither plasma-apply-wallpaperimage (KDE) nor gsettings (Cinnamon) was found." >&2
+        exit 1
+    fi
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -56,18 +78,17 @@ install -m 0644 "${XML_PATH}" "${CONFIG_XML}"
 cat > "${SERVICE}" <<EOF
 [Unit]
 Description=ChronoWall dynamic wallpaper daemon
-After=graphical-session.target
 PartOf=graphical-session.target
+After=graphical-session.target
 
 [Service]
 Type=simple
 ExecStart=${BINARY} run ${CONFIG_XML}
 Restart=on-failure
 RestartSec=2
-Environment=DISPLAY=${DISPLAY_VALUE}
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target default.target
 EOF
 
 systemctl --user daemon-reload
